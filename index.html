@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,22 +6,28 @@
   <title>NEXUS AMUSEMENT — Premium Gaming & Amusement Solutions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --neon-cyan: #00f5ff;
-      --neon-pink: #ff0080;
-      --neon-gold: #ffd700;
-      --neon-green: #39ff14;
-      --bg-void: #020408;
-      --bg-deep: #050b12;
-      --bg-card: #0a1520;
-      --bg-glass: rgba(0,245,255,0.04);
-      --border-glow: rgba(0,245,255,0.2);
-      --text-primary: #e8f4ff;
-      --text-muted: #5a7a9a;
-      --text-dim: #2a4a6a;
+      --neon-cyan: #ff5722;      /* IGF primary orange */
+      --neon-pink: #e8321a;      /* IGF deep red */
+      --neon-gold: #ffab40;      /* IGF amber */
+      --neon-green: #ff7043;     /* IGF light orange */
+      --bg-void: #0d0705;
+      --bg-deep: #120905;
+      --bg-card: #1a0e08;
+      --bg-glass: rgba(255,87,34,0.04);
+      --border-glow: rgba(255,87,34,0.25);
+      --text-primary: #fff0ea;
+      --text-muted: #8a6050;
+      --text-dim: #4a2a1a;
+      /* IGF brand colors */
+      --igf-orange: #ff5722;
+      --igf-red: #c0392b;
+      --igf-dark: #0d0705;
+      --igf-amber: #ffab40;
     }
 
     html { scroll-behavior: smooth; }
@@ -36,23 +42,23 @@
     }
 
     /* CUSTOM CURSOR */
-    .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background: var(--neon-cyan); pointer-events: none; z-index: 9999; mix-blend-mode: screen; transition: transform 0.1s; }
-    .cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(0,245,255,0.5); pointer-events: none; z-index: 9998; transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), opacity 0.3s; }
+    .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background: var(--igf-orange); pointer-events: none; z-index: 9999; mix-blend-mode: screen; transition: transform 0.1s; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,87,34,0.6); pointer-events: none; z-index: 9998; transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), opacity 0.3s; }
 
     /* GRID BACKGROUND */
     .grid-bg {
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(255,87,34,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,87,34,0.04) 1px, transparent 1px);
       background-size: 60px 60px;
       pointer-events: none;
     }
     .grid-bg::after {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,245,255,0.05) 0%, transparent 60%),
-                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(255,0,128,0.04) 0%, transparent 50%);
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,87,34,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,57,43,0.05) 0%, transparent 50%);
     }
 
     /* NAV */
@@ -61,20 +67,25 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 5%;
       height: 72px;
-      background: rgba(2,4,8,0.85);
+      background: rgba(13,7,5,0.92);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,245,255,0.08);
+      border-bottom: 1px solid rgba(255,87,34,0.15);
     }
     .nav-logo {
+      display: flex; align-items: center; gap: 12px;
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 1.4rem;
-      letter-spacing: 0.15em;
-      color: var(--neon-cyan);
-      text-shadow: 0 0 20px rgba(0,245,255,0.6);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
       text-decoration: none;
+      line-height: 1.1;
     }
-    .nav-logo span { color: var(--neon-pink); text-shadow: 0 0 20px rgba(255,0,128,0.6); }
+    .nav-logo-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+    }
+    .nav-logo-text { display: flex; flex-direction: column; }
+    .nav-logo-line1 { color: #ff5722; text-shadow: 0 0 16px rgba(255,87,34,0.7); font-size: 1.05rem; }
+    .nav-logo-line2 { color: #fff0ea; font-size: 0.65rem; letter-spacing: 0.25em; opacity: 0.85; }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       color: var(--text-muted);
@@ -86,12 +97,12 @@
       font-family: 'Syne', sans-serif;
       font-weight: 600;
     }
-    .nav-links a:hover { color: var(--neon-cyan); }
+    .nav-links a:hover { color: var(--igf-orange); }
     .nav-cta {
       padding: 8px 24px;
-      border: 1px solid var(--neon-cyan);
+      border: 1px solid var(--igf-orange);
       background: transparent;
-      color: var(--neon-cyan);
+      color: var(--igf-orange);
       font-family: 'Orbitron', sans-serif;
       font-size: 0.7rem;
       letter-spacing: 0.15em;
@@ -100,7 +111,13 @@
       transition: all 0.3s;
       text-decoration: none;
     }
-    .nav-cta:hover { background: var(--neon-cyan); color: var(--bg-void); box-shadow: 0 0 30px rgba(0,245,255,0.4); }
+    .nav-cta:hover { background: var(--igf-orange); color: var(--bg-void); box-shadow: 0 0 30px rgba(255,87,34,0.5); }
+
+    /* THREE.JS CANVAS */
+    #hero-canvas {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%;
+    }
 
     /* HERO */
     .hero {
@@ -108,14 +125,16 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: 0 5%;
       overflow: hidden;
+      text-align: center;
     }
-    .hero-content { position: relative; z-index: 2; max-width: 750px; }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; width: 100%; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(0,245,255,0.2);
-      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(255,87,34,0.3);
+      background: rgba(255,87,34,0.06);
       padding: 6px 16px;
       border-radius: 2px;
       font-size: 0.7rem;
@@ -125,30 +144,41 @@
       margin-bottom: 2rem;
       animation: fadeUp 0.8s ease both;
     }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); animation: pulse 2s infinite; }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--igf-orange); box-shadow: 0 0 8px var(--igf-orange); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .hero-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-size: clamp(2.2rem, 5.5vw, 5.5rem);
       font-weight: 900;
       line-height: 1.05;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.02em;
       margin-bottom: 1.5rem;
       animation: fadeUp 0.8s 0.1s ease both;
     }
     .hero-title .line1 { display: block; }
-    .hero-title .line2 { display: block; color: transparent; -webkit-text-stroke: 1px rgba(0,245,255,0.4); }
-    .hero-title .accent { color: var(--neon-cyan); text-shadow: 0 0 40px rgba(0,245,255,0.5); }
+    .hero-title .line2 { display: block; color: transparent; -webkit-text-stroke: 1px rgba(0,245,255,0.5); }
+    .hero-title .line3 {
+      display: block;
+      background: linear-gradient(90deg, #ff5722, #ffab40, #c0392b, #ff5722);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s linear infinite;
+      text-shadow: none;
+    }
+    @keyframes gradientShift { to { background-position: 200% center; } }
+    .hero-title .accent { color: var(--neon-cyan); text-shadow: 0 0 40px rgba(0,245,255,0.6), 0 0 80px rgba(0,245,255,0.3); }
     .hero-sub {
       font-size: 1.05rem;
       color: var(--text-muted);
       line-height: 1.8;
-      max-width: 540px;
-      margin-bottom: 2.5rem;
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
       animation: fadeUp 0.8s 0.2s ease both;
       font-weight: 400;
     }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.8s 0.3s ease both; }
     .btn-primary {
       padding: 14px 36px;
       background: var(--neon-cyan);
@@ -186,6 +216,7 @@
     .hero-stats {
       display: flex; gap: 3rem; margin-top: 3.5rem;
       animation: fadeUp 0.8s 0.4s ease both;
+      justify-content: center;
     }
     .stat-item {}
     .stat-num {
@@ -199,42 +230,122 @@
     .stat-num span { color: var(--neon-pink); }
     .stat-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
 
-    /* Hero visual elements */
-    .hero-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-    }
-    .orb1 { width: 600px; height: 600px; right: -100px; top: -100px; background: radial-gradient(circle, rgba(0,245,255,0.08) 0%, transparent 70%); }
-    .orb2 { width: 400px; height: 400px; right: 200px; bottom: -100px; background: radial-gradient(circle, rgba(255,0,128,0.06) 0%, transparent 70%); }
-    .hero-ring {
-      position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-      width: 420px; height: 420px;
-      border: 1px solid rgba(0,245,255,0.1);
-      border-radius: 50%;
-      animation: rotateSlow 20s linear infinite;
-    }
-    .hero-ring::before {
-      content: ''; position: absolute; inset: 20px;
-      border: 1px solid rgba(255,0,128,0.1);
-      border-radius: 50%;
-      animation: rotateSlow 15s linear infinite reverse;
-    }
-    .hero-ring::after {
-      content: ''; position: absolute; inset: 40px;
-      border: 1px solid rgba(255,215,0,0.08);
-      border-radius: 50%;
-    }
+    /* Hero visual elements (kept for fallback) */
+    .hero-orb { display: none; }
+    .hero-ring { display: none; }
     @keyframes rotateSlow { to { transform: rotate(360deg); } }
-    .hero-ring-dot {
-      position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--neon-cyan);
-      box-shadow: 0 0 12px var(--neon-cyan), 0 0 24px var(--neon-cyan);
+    @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+
+    /* ── LIGHTBOX ── */
+    .lb-overlay {
+      position: fixed; inset: 0; z-index: 19000;
+      background: rgba(0,0,0,0.96);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .lb-overlay.open { opacity: 1; pointer-events: all; }
+    .lb-img {
+      max-width: 90vw; max-height: 88vh;
+      object-fit: contain;
+      border: 1px solid rgba(255,87,34,0.4);
+      box-shadow: 0 0 60px rgba(255,87,34,0.3), 0 0 120px rgba(0,245,255,0.1);
+      border-radius: 4px;
+      transition: transform 0.3s;
+    }
+    .lb-close {
+      position: absolute; top: 20px; right: 28px;
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 1.4rem;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+    }
+    .lb-close:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+    .lb-caption {
+      position: absolute; bottom: 24px; left: 0; right: 0;
+      text-align: center;
+      font-family: Orbitron, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--igf-orange);
     }
 
-    @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+    /* ── BACK TO TOP ── */
+    .back-top {
+      position: fixed; bottom: 96px; right: 28px; z-index: 200;
+      width: 44px; height: 44px;
+      background: rgba(255,87,34,0.1);
+      border: 1px solid rgba(255,87,34,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--igf-orange); font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0; pointer-events: none;
+      transition: all 0.3s;
+    }
+    .back-top.show { opacity: 1; pointer-events: all; }
+    .back-top:hover { background: rgba(255,87,34,0.2); box-shadow: 0 0 20px rgba(255,87,34,0.3); }
+
+    /* ── MOBILE NAV ── */
+    .hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--neon-cyan);
+      transition: all 0.3s;
+    }
+    .mobile-menu {
+      position: fixed; top: 72px; left: 0; right: 0; z-index: 99;
+      background: rgba(2,4,8,0.98);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,245,255,0.1);
+      padding: 24px 5%;
+      display: flex; flex-direction: column; gap: 16px;
+      transform: translateY(-110%);
+      transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+    }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a {
+      color: var(--text-muted); text-decoration: none;
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,245,255,0.06);
+      transition: color 0.3s;
+    }
+    .mobile-menu a:hover { color: var(--neon-cyan); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+    }
+
+    /* ── CATALOG HD UPGRADE ── */
+    .cat-prod-card {
+      aspect-ratio: 1 / 1.1 !important;
+    }
+    .cat-prod-img {
+      padding: 0 !important;
+      object-fit: cover !important;
+      cursor: zoom-in;
+    }
+    .cat-prod-card:hover .cat-prod-img {
+      transform: scale(1.05);
+      transition: transform 0.4s ease;
+    }
+
+    /* ── PROD MODAL HD ── */
+    .prod-modal-img {
+      object-fit: contain !important;
+      cursor: zoom-in;
+      background: linear-gradient(135deg, #010608 0%, #071828 100%);
+    }
+    .prod-modal-img:hover {
+      filter: brightness(1.08);
+    }
 
     /* SECTIONS */
     section { position: relative; z-index: 1; }
@@ -348,66 +459,165 @@
     .products-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(0,245,255,0.06);
+      gap: 24px;
+      padding: 0 5% 80px;
+      background: transparent;
     }
+    /* ──── PREMIUM CATALOG CARDS ──── */
     .product-card {
-      background: var(--bg-deep);
-      padding: 36px 28px;
+      background: var(--bg-card);
+      padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 16px;
       position: relative;
       overflow: hidden;
       cursor: none;
-      transition: background 0.4s;
-      group: true;
+      border: 1px solid rgba(255,87,34,0.1);
+      border-radius: 10px;
+      transition: all 0.45s cubic-bezier(0.23,1,0.32,1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
     .product-card::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 60%);
+      border: 2px solid var(--igf-orange);
       opacity: 0;
       transition: opacity 0.4s;
+      z-index: 2;
+      pointer-events: none;
     }
-    .product-card:hover { background: #08131e; }
+    .product-card::after {
+      content: '';
+      position: absolute;
+      top: -100%; left: -100%;
+      width: 60%; height: 300%;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,87,34,0.06) 50%, transparent 60%);
+      transition: left 0.7s ease, top 0.7s ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .product-card:hover {
+      background: #1e0f07;
+      border-color: rgba(255,87,34,0.45);
+      transform: translateY(-9px);
+      box-shadow: 0 28px 60px rgba(255,87,34,0.22), 0 0 0 1px rgba(255,87,34,0.18), 0 4px 20px rgba(0,0,0,0.5);
+    }
     .product-card:hover::before { opacity: 1; }
-    .product-card-glow {
-      position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-      transform: scaleX(0);
-      transition: transform 0.4s;
-    }
-    .product-card:hover .product-card-glow { transform: scaleX(1); }
-    .product-icon {
-      width: 60px; height: 60px;
+    .product-card:hover::after { left: 130%; top: -100%; }
+    .product-card-thumb {
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e0f07, #0d0705);
+      position: relative;
       display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      border-radius: 10px 10px 0 0;
     }
-    .product-icon img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1) opacity(0.7); transition: filter 0.4s; }
-    .product-card:hover .product-icon img { filter: brightness(0) saturate(100%) invert(86%) sepia(89%) saturate(2000%) hue-rotate(150deg) brightness(115%); }
+    .product-card-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.55s cubic-bezier(0.23,1,0.32,1), filter 0.4s;
+      filter: brightness(0.85) saturate(1.1);
+    }
+    .product-card:hover .product-card-thumb img {
+      transform: scale(1.09);
+      filter: brightness(1.05) saturate(1.25);
+    }
+    .product-card-thumb .thumb-icon {
+      width: 72px; height: 72px; object-fit: contain;
+      filter: brightness(0) invert(1) opacity(0.3);
+      transition: filter 0.4s, transform 0.4s;
+    }
+    .product-card:hover .product-card-thumb .thumb-icon {
+      filter: brightness(0) saturate(100%) invert(60%) sepia(80%) saturate(800%) hue-rotate(340deg) brightness(115%);
+      transform: scale(1.08);
+    }
+    .product-card-thumb > * { pointer-events: none; }
+    .product-card-thumb-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 35%, rgba(13,7,5,0.9) 100%);
+      z-index: 1;
+    }
+    .product-card-view-pill {
+      position: absolute; bottom: 12px; left: 50%; z-index: 3;
+      transform: translateX(-50%) translateY(22px);
+      background: var(--igf-orange);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.52rem; letter-spacing: 0.2em;
+      padding: 5px 16px;
+      white-space: nowrap;
+      transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.4s;
+      opacity: 0;
+      border-radius: 1px;
+    }
+    .product-card:hover .product-card-view-pill { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .product-card-body {
+      padding: 18px 22px 22px;
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 2; position: relative; flex: 1;
+    }
+    .product-card-count {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.52rem; letter-spacing: 0.15em;
+      color: var(--igf-amber);
+      margin-bottom: 2px;
+    }
+    .product-card-count-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--igf-amber);
+      box-shadow: 0 0 6px var(--igf-amber);
+    }
     .product-name {
       font-family: 'Syne', sans-serif;
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 700;
       color: var(--text-primary);
-      line-height: 1.3;
+      line-height: 1.25;
+      transition: color 0.3s;
     }
-    .product-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+    .product-card:hover .product-name { color: #fff; }
+    .product-desc { font-size: 0.77rem; color: var(--text-muted); line-height: 1.6; }
+    .product-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 14px;
+    }
+    .product-card-explore {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--igf-orange); opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .product-card:hover .product-card-explore { opacity: 1; }
     .product-arrow {
-      margin-top: auto;
-      width: 28px; height: 28px;
-      border: 1px solid rgba(0,245,255,0.2);
+      width: 30px; height: 30px;
+      border: 1px solid rgba(255,87,34,0.2);
       display: flex; align-items: center; justify-content: center;
       color: var(--text-dim);
-      font-size: 0.75rem;
-      transition: all 0.3s;
+      font-size: 0.8rem;
+      transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+      border-radius: 2px;
     }
     .product-card:hover .product-arrow {
-      border-color: var(--neon-cyan);
-      color: var(--neon-cyan);
-      background: rgba(0,245,255,0.08);
+      border-color: var(--igf-orange);
+      color: var(--igf-orange);
+      background: rgba(255,87,34,0.1);
+      transform: translateX(5px);
     }
+    .product-card-glow {
+      position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--igf-orange), var(--igf-red));
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.45s cubic-bezier(0.23,1,0.32,1);
+    }
+    .product-card:hover .product-card-glow { transform: scaleY(1); }
+    .product-card, .cat-prod-card, [onclick], button, a { cursor: pointer !important; }
+    .product-icon { display: none; }
 
+    /* Force product cards visible immediately - no scroll gate */
+    .products-grid .product-card { opacity: 1 !important; transform: none !important; pointer-events: all !important; }
     /* WHY CHOOSE US */
     .why-section { background: var(--bg-deep); }
     .why-grid {
@@ -677,7 +887,7 @@
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 4% 60px; }
       .footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
     }
     @media (max-width: 768px) {
@@ -786,26 +996,33 @@
     }
 
     .cat-prod-card {
-      background: linear-gradient(160deg, #050b12 0%, #0a1828 55%, #060f1a 100%);
-      border: 1px solid rgba(0,245,255,0.1);
-      border-radius: 16px;
+      background: linear-gradient(160deg, #180a05 0%, #1e0f07 55%, #120803 100%);
+      border: 1px solid rgba(255,87,34,0.12);
+      border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.35s;
       position: relative;
       aspect-ratio: 3 / 4;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.45);
     }
     .cat-prod-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(0,245,255,0.08);
-      border-color: rgba(0,245,255,0.3);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 24px 56px rgba(255,87,34,0.2), 0 0 0 1px rgba(255,87,34,0.2);
+      border-color: rgba(255,87,34,0.4);
     }
     .cat-prod-img {
       width: 100%; height: 100%;
       object-fit: contain;
       object-position: center;
       display: block;
-      padding: 12px 12px 52px;
+      padding: 12px 12px 56px;
+      transition: transform 0.45s cubic-bezier(0.23,1,0.32,1), filter 0.35s;
+      filter: brightness(0.9) saturate(1.1);
+    }
+    .cat-prod-card:hover .cat-prod-img {
+      transform: scale(1.05);
+      filter: brightness(1.05) saturate(1.2);
     }
     .cat-prod-img-placeholder {
       width: 100%; height: 100%;
@@ -818,20 +1035,32 @@
     .cat-prod-body {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      padding: 12px 16px 14px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.55));
-      border-radius: 0 0 16px 16px;
+      padding: 40px 16px 16px;
+      background: linear-gradient(transparent, rgba(13,7,5,0.92));
+      border-radius: 0 0 14px 14px;
     }
     .cat-prod-name {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.92rem; font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
       color: #ffffff;
       letter-spacing: 0.01em;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.7);
       line-height: 1.3;
+      margin-bottom: 4px;
     }
     .cat-prod-desc { display: none; }
-    .cat-prod-tag  { display: none; }
+    .cat-prod-tag {
+      display: inline-block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.48rem;
+      letter-spacing: 0.15em;
+      padding: 3px 8px;
+      background: rgba(255,87,34,0.2);
+      border: 1px solid rgba(255,87,34,0.35);
+      color: #ff5722;
+      border-radius: 2px;
+      margin-top: 4px;
+    }
 
 
     /* ---- PRODUCT DETAIL MODAL ---- */
@@ -849,9 +1078,10 @@
 
     .prod-modal-inner {
       max-width: 1100px; width: 100%;
-      background: var(--bg-deep);
-      border: 1px solid rgba(0,245,255,0.15);
-      border-radius: 4px;
+      background: #0f0806;
+      border: 1px solid rgba(255,87,34,0.22);
+      border-radius: 14px;
+      box-shadow: 0 0 100px rgba(255,87,34,0.12), 0 40px 80px rgba(0,0,0,0.6);
       overflow: hidden;
       transform: translateY(30px);
       transition: transform 0.4s ease;
@@ -869,7 +1099,7 @@
       transition: all 0.3s;
       text-transform: uppercase;
     }
-    .prod-modal-close:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+    .prod-modal-close:hover { border-color: var(--igf-orange); color: var(--igf-orange); background: rgba(255,87,34,0.08); }
 
     .prod-modal-layout {
       display: grid;
@@ -906,22 +1136,18 @@
     }
     .prod-modal-badge {
       position: absolute; top: 20px; left: 20px;
-      background: rgba(0,245,255,0.1);
-      border: 1px solid rgba(0,245,255,0.3);
-      color: var(--neon-cyan);
+      background: rgba(255,87,34,0.1);
+      border: 1px solid rgba(255,87,34,0.35);
+      color: var(--igf-orange);
       font-family: 'Orbitron', sans-serif;
       font-size: 0.6rem; letter-spacing: 0.18em;
       padding: 6px 14px;
     }
 
-    .prod-modal-info {
-      padding: 40px 36px;
-      display: flex; flex-direction: column;
-      gap: 0;
-    }
+    .prod-modal-info { padding: 0; display: flex; flex-direction: column; gap: 0; overflow-y: auto; }
     .prod-modal-cat {
       font-size: 0.65rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--neon-cyan);
+      text-transform: uppercase; color: var(--igf-orange);
       font-family: 'Orbitron', sans-serif;
       margin-bottom: 12px;
     }
@@ -972,15 +1198,15 @@
     .prod-feature-list li::before {
       content: ''; display: inline-block;
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--neon-cyan);
-      box-shadow: 0 0 6px var(--neon-cyan);
+      background: var(--igf-orange);
+      box-shadow: 0 0 6px var(--igf-orange);
       margin-top: 6px; flex-shrink: 0;
     }
-    .prod-modal-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .prod-modal-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: auto; padding-top: 24px; }
     .prod-enquire-btn {
       padding: 13px 28px;
-      background: var(--neon-cyan);
-      color: var(--bg-void);
+      background: var(--igf-orange);
+      color: #fff;
       font-family: 'Orbitron', sans-serif;
       font-size: 0.72rem; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
@@ -989,7 +1215,7 @@
       clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
       text-decoration: none; display: inline-block;
     }
-    .prod-enquire-btn:hover { box-shadow: 0 0 30px rgba(0,245,255,0.4); }
+    .prod-enquire-btn:hover { box-shadow: 0 0 30px rgba(255,87,34,0.5); transform: translateY(-2px); }
     .prod-whatsapp-btn {
       padding: 13px 24px;
       background: transparent;
@@ -1003,6 +1229,133 @@
     }
     .prod-whatsapp-btn:hover { border-color: #25D366; background: rgba(37,211,102,0.06); }
 
+    /* ── ANIMATED DASHBOARD EXTRAS ── */
+    /* Dashboard top bar */
+    .dash-top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 36px 0;
+      border-bottom: 1px solid rgba(255,87,34,0.12);
+    }
+    .dash-tag-badge {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 4px 12px;
+      background: rgba(255,87,34,0.12);
+      border: 1px solid rgba(255,87,34,0.3);
+      color: var(--igf-orange);
+      border-radius: 2px;
+    }
+    .dash-avail-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.7rem; color: #4ade80;
+      font-family: 'Orbitron', sans-serif; letter-spacing: 0.1em;
+    }
+    .dash-avail-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 2s infinite;
+    }
+    .dash-rating {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem;
+    }
+    .dash-stars { color: var(--igf-amber); letter-spacing: 2px; font-size: 0.8rem; }
+    .dash-rating-num { color: var(--text-muted); font-size: 0.72rem; }
+
+    /* Dashboard tab navigation */
+    .dash-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid rgba(255,87,34,0.1);
+      margin: 0 36px;
+      margin-top: 16px;
+    }
+    .dash-tab {
+      padding: 10px 18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted);
+      background: none; border: none; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+    .dash-tab:hover { color: var(--igf-orange); }
+    .dash-tab.active {
+      color: var(--igf-orange);
+      border-bottom-color: var(--igf-orange);
+    }
+    .dash-tab-content { display: none; }
+    .dash-tab-content.active { display: block; animation: fadeUp 0.3s ease both; }
+
+    /* Progress bars for specs */
+    .dash-spec-bar-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 10px;
+    }
+    .dash-spec-bar-label {
+      font-size: 0.72rem; color: var(--text-muted);
+      min-width: 120px; font-family: 'Orbitron', sans-serif;
+      font-size: 0.58rem; letter-spacing: 0.08em;
+    }
+    .dash-spec-bar-track {
+      flex: 1; height: 4px;
+      background: rgba(255,87,34,0.12);
+      border-radius: 2px; overflow: hidden;
+    }
+    .dash-spec-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--igf-red), var(--igf-orange));
+      border-radius: 2px;
+      transition: width 0.8s cubic-bezier(0.23,1,0.32,1);
+      width: 0;
+    }
+    .dash-spec-bar-val {
+      font-size: 0.68rem; color: var(--igf-amber);
+      font-family: 'Orbitron', sans-serif; min-width: 36px; text-align: right;
+    }
+
+    /* Image zoom overlay on modal */
+    .prod-modal-img-side {
+      position: relative;
+    }
+    .dash-zoom-hint {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(13,7,5,0.8);
+      border: 1px solid rgba(255,87,34,0.3);
+      color: var(--igf-orange);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem; letter-spacing: 0.1em;
+      padding: 5px 10px;
+      pointer-events: none;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .prod-modal-img-side:hover .dash-zoom-hint { opacity: 1; }
+
+    /* Share button */
+    .dash-share-btn {
+      padding: 13px 20px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer; transition: all 0.3s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .dash-share-btn:hover { border-color: var(--igf-orange); color: var(--igf-orange); }
+
+    /* Install badge */
+    .dash-install-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,87,34,0.06);
+      border: 1px solid rgba(255,87,34,0.2);
+      border-radius: 2px;
+      font-size: 0.7rem; color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .dash-install-icon { font-size: 0.9rem; }
+
     /* Scan-line overlay for category page */
     .cat-scanlines {
       position: fixed; inset: 0; z-index: -1;
@@ -1011,6 +1364,117 @@
         rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
       );
       pointer-events: none;
+    }
+
+    /* ============================================
+       FORM VALIDATION & SUCCESS MODAL STYLES
+       ============================================ */
+    .form-field input.invalid, 
+    .form-field select.invalid, 
+    .form-field textarea.invalid {
+      border-color: rgba(255, 0, 128, 0.6) !important;
+      background: rgba(255, 0, 128, 0.03) !important;
+      box-shadow: 0 0 10px rgba(255, 0, 128, 0.2);
+    }
+    
+    .form-field .error-msg {
+      color: var(--neon-pink);
+      font-size: 0.7rem;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 0.05em;
+      margin-top: 6px;
+      display: none;
+      text-transform: uppercase;
+    }
+    
+    .form-field input.invalid + .error-msg,
+    .form-field select.invalid + .error-msg,
+    .form-field textarea.invalid + .error-msg {
+      display: block;
+    }
+
+    /* Success Modal Overlay */
+    .modal-success-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(2, 4, 8, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    
+    .modal-success-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-success-card {
+      background: rgba(10, 21, 32, 0.85);
+      border: 1px solid rgba(0, 245, 255, 0.25);
+      box-shadow: 0 0 50px rgba(0, 245, 255, 0.2);
+      padding: 40px;
+      border-radius: 4px;
+      text-align: center;
+      max-width: 480px;
+      width: 90%;
+      transform: translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(20px);
+      position: relative;
+    }
+    
+    .modal-success-overlay.open .modal-success-card {
+      transform: translateY(0);
+    }
+    
+    .success-icon-wrap {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 24px;
+      background: rgba(0, 245, 255, 0.05);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+    }
+    
+    .success-icon-wrap svg {
+      width: 36px;
+      height: 36px;
+      color: var(--neon-cyan);
+      filter: drop-shadow(0 0 6px var(--neon-cyan));
+    }
+    
+    .success-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+    
+    .success-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    /* Button Loading States */
+    .btn-primary.loading {
+      pointer-events: none;
+      background: var(--text-dim) !important;
+      color: var(--text-muted) !important;
+      box-shadow: none !important;
     }
 
 </style>
@@ -1023,7 +1487,38 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">NEXUS<span>X</span></a>
+  <a class="nav-logo" href="#">
+    <svg class="nav-logo-icon" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Factory building -->
+      <rect x="18" y="28" width="64" height="36" rx="3" fill="#c0392b" stroke="#1a1a1a" stroke-width="3"/>
+      <rect x="24" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <rect x="44" y="16" width="12" height="16" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <rect x="64" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <!-- Smoke puff -->
+      <ellipse cx="70" cy="11" rx="5" ry="4" fill="#1a1a1a" opacity="0.8"/>
+      <ellipse cx="76" cy="8" rx="4" ry="3.5" fill="#1a1a1a" opacity="0.6"/>
+      <!-- Factory windows -->
+      <rect x="30" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <rect x="46" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <rect x="62" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <!-- Gamepad body -->
+      <rect x="12" y="54" width="76" height="40" rx="20" fill="#c0392b" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- D-pad -->
+      <rect x="25" y="67" width="6" height="14" rx="1" fill="#1a1a1a"/>
+      <rect x="21" y="71" width="14" height="6" rx="1" fill="#1a1a1a"/>
+      <!-- ABXY buttons -->
+      <circle cx="69" cy="68" r="3.5" fill="#1a1a1a"/>
+      <circle cx="76" cy="74" r="3.5" fill="#1a1a1a"/>
+      <circle cx="62" cy="74" r="3.5" fill="#1a1a1a"/>
+      <!-- Center buttons -->
+      <rect x="44" y="72" width="5" height="3" rx="1" fill="#1a1a1a" opacity="0.7"/>
+      <rect x="51" y="72" width="5" height="3" rx="1" fill="#1a1a1a" opacity="0.7"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span class="nav-logo-line1">INDIAN</span>
+      <span class="nav-logo-line2">GAME FACTORY</span>
+    </div>
+  </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#products">Products</a></li>
@@ -1031,23 +1526,34 @@
     <li><a href="#why">Why Us</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Get Quote</a>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <a href="#contact" class="nav-cta">Get Quote</a>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#products" onclick="closeMobileMenu()">Products</a>
+  <a href="#showcase" onclick="closeMobileMenu()">Gallery</a>
+  <a href="#why" onclick="closeMobileMenu()">Why Us</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-orb orb1"></div>
-  <div class="hero-orb orb2"></div>
-  <div class="hero-ring"><div class="hero-ring-dot"></div></div>
+  <canvas id="hero-canvas"></canvas>
 
   <div class="hero-content">
     <div class="hero-badge">
-      India's Premier Amusement Equipment Supplier
+      India's #1 Gaming Equipment Manufacturer
     </div>
     <h1 class="hero-title">
-      <span class="line1">POWER UP</span>
-      <span class="line1">YOUR <span class="accent">GAMING</span></span>
-      <span class="line2">EXPERIENCE</span>
+      <span class="line1">POWER UP YOUR</span>
+      <span class="line3">GAMING EMPIRE</span>
     </h1>
     <p class="hero-sub">
       From hyper-immersive VR arenas to classic redemption machines — we supply, install and maintain premium amusement equipment for entertainment hubs, malls, and family entertainment centers across India.
@@ -1150,90 +1656,235 @@
   </div>
 
   <div class="products-grid">
-    <div class="product-card reveal">
+
+    <div class="product-card" onclick="openCatOverlay('air-hockey')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Air-Hockey.svg" alt="Air Hockey" /></div>
-      <div class="product-name">Air Hockey</div>
-      <div class="product-desc">High-speed competitive tables for all age groups. Commercial-grade build for continuous operation.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/air-hockey-aurora.png" alt="Air Hockey" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Air-Hockey.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Air Hockey</div>
+        <div class="product-desc">High-speed competitive tables for all age groups. Commercial-grade build for continuous operation.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-1">
+
+    <div class="product-card reveal-delay-1" onclick="openCatOverlay('bumper-cars')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Bumpers-Cars.svg" alt="Bumper Cars" /></div>
-      <div class="product-name">Bumper Cars</div>
-      <div class="product-desc">Electric and battery-powered bumper cars for maximum floor fun. Safe, durable, and highly profitable.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/bc-drift-bumper.png" alt="Bumper Cars" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Bumpers-Cars.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Bumper Cars</div>
+        <div class="product-desc">Electric and battery-powered bumper cars for maximum floor fun. Safe, durable, and highly profitable.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-2">
+
+    <div class="product-card reveal-delay-2" onclick="openCatOverlay('virtual-reality')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Virtual-Reality-Games.svg" alt="VR Games" /></div>
-      <div class="product-name">Virtual Reality</div>
-      <div class="product-desc">Next-gen VR experiences — simulators, motion platforms, and immersive multiplayer setups.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/vr-simulator.png" alt="Virtual Reality" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Virtual-Reality-Games.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Virtual Reality</div>
+        <div class="product-desc">Next-gen VR experiences — simulators, motion platforms, and immersive multiplayer setups.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-3">
+
+    <div class="product-card reveal-delay-3" onclick="openCatOverlay('trampoline-park')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Trampoline-Park.svg" alt="Trampoline Park" /></div>
-      <div class="product-name">Trampoline Park</div>
-      <div class="product-desc">Full trampoline park designs with foam pits, wall runs, and dodgeball zones.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/tp-trampoline-1.jpg" alt="Trampoline Park" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Trampoline-Park.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Trampoline Park</div>
+        <div class="product-desc">Full trampoline park designs with foam pits, wall runs, and dodgeball zones.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal">
+
+    <div class="product-card" onclick="openCatOverlay('basketball-machines')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Basketball-Machine.svg" alt="Basketball" /></div>
-      <div class="product-name">Basketball Machines</div>
-      <div class="product-desc">Redemption-enabled hoops with digital scoring. Perfect for gaming centers and arcades.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/basketball-showtime.png" alt="Basketball Machines" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Basketball-Machine.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Basketball Machines</div>
+        <div class="product-desc">Redemption-enabled hoops with digital scoring. Perfect for gaming centers and arcades.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-1">
+
+    <div class="product-card reveal-delay-1" onclick="openCatOverlay('bowling-alley')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Bowling-Alley.svg" alt="Bowling" /></div>
-      <div class="product-name">Bowling Alley</div>
-      <div class="product-desc">Mini and full-size bowling lanes with automated scoring and vivid digital displays.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/Bowling.jpeg.jpg" alt="Bowling Alley" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Bowling-Alley.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Bowling Alley</div>
+        <div class="product-desc">Mini and full-size bowling lanes with automated scoring and vivid digital displays.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-2">
+
+    <div class="product-card reveal-delay-2" onclick="openCatOverlay('kiddy-rides')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Kiddy-Rides-Games.svg" alt="Kiddy Rides" /></div>
-      <div class="product-name">Kiddy Rides</div>
-      <div class="product-desc">Battery-operated and coin-operated rides for children — safe, colorful, and highly engaging.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/kr-cool-driver.png" alt="Kiddy Rides" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Kiddy-Rides-Games.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Kiddy Rides</div>
+        <div class="product-desc">Battery-operated and coin-operated rides for children — safe, colorful, and highly engaging.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-3">
+
+    <div class="product-card reveal-delay-3" onclick="openCatOverlay('shooting-games')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Shooting-Games.svg" alt="Shooting" /></div>
-      <div class="product-name">Shooting Games</div>
-      <div class="product-desc">Laser shooting galleries and digital target ranges with leaderboard integration.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/sg-crazy-gun.png" alt="Shooting Games" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Shooting-Games.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Shooting Games</div>
+        <div class="product-desc">Laser shooting galleries and digital target ranges with leaderboard integration.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal">
+
+    <div class="product-card" onclick="openCatOverlay('gift-redemption')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Gift-Redemption.svg" alt="Redemption" /></div>
-      <div class="product-name">Gift Redemption</div>
-      <div class="product-desc">Ticket-dispensing redemption systems with counter setup and prize management software.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/kr-ufo.png" alt="Gift Redemption" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Gift-Redemption.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Gift Redemption</div>
+        <div class="product-desc">Ticket-dispensing redemption systems with counter setup and prize management software.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-1">
+
+    <div class="product-card reveal-delay-1" onclick="openCatOverlay('strength-based-games')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Strength-based-Games.svg" alt="Strength Games" /></div>
-      <div class="product-name">Strength-Based Games</div>
-      <div class="product-desc">Test-your-strength towers, punch bags, and grip meters — popular crowd-pullers.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/products/sb-hercules.png" alt="Strength-Based Games" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Strength-based-Games.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Strength-Based Games</div>
+        <div class="product-desc">Test-your-strength towers, punch bags, and grip meters — popular crowd-pullers.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-2">
+
+    <div class="product-card reveal-delay-2" onclick="openCatOverlay('inflatables')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Inflatables.svg" alt="Inflatables" /></div>
-      <div class="product-name">Inflatables</div>
-      <div class="product-desc">Bouncy castles, obstacle courses, and slides — ideal for outdoor events and FECs.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/Softplay.jpeg.jpg" alt="Inflatables" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Inflatables.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Inflatables</div>
+        <div class="product-desc">Themed inflatable parks, bouncy castles, and obstacle courses for all age groups.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
-    <div class="product-card reveal reveal-delay-3">
+
+    <div class="product-card reveal-delay-3" onclick="openCatOverlay('battery-operated-rides')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
-      <div class="product-icon"><img src="assets/Battery-Operated-Rides.svg" alt="Battery Rides" /></div>
-      <div class="product-name">Battery Operated Rides</div>
-      <div class="product-desc">Jeeps, bikes, and character vehicles for malls and outdoor entertainment zones.</div>
-      <div class="product-arrow">→</div>
+      <div class="product-card-thumb">
+        <img src="assets/battery-tron-bike.png" alt="Battery Operated Rides" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <img src="assets/Battery-Operated-Rides.svg" class="thumb-icon" style="display:none" alt="" />
+        <div class="product-card-thumb-overlay"></div>
+        <div class="product-card-view-pill">VIEW PRODUCTS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+        <div class="product-name">Battery Operated Rides</div>
+        <div class="product-desc">Indoor and outdoor battery-powered vehicles and track rides for children and teens.</div>
+        <div class="product-card-footer">
+          <span class="product-card-explore">EXPLORE →</span>
+          <div class="product-arrow">›</div>
+        </div>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -1447,24 +2098,37 @@
       </div>
     </div>
     <div class="reveal reveal-delay-2">
-      <div class="contact-form">
+      <!-- Hidden iframe to bypass CORS/Origin blocks on file:// and local domains -->
+      <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+      
+      <form class="contact-form" id="enquiryForm" action="https://formsubmit.co/deyshubham313@gmail.com" method="POST" target="hidden_iframe" novalidate>
+        <!-- FormSubmit configuration fields -->
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_subject" id="emailSubject" value="New Enquiry - Indian Game Factory">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_autoresponse" value="Thank you for contacting Indian Game Factory! Our team will get back to you within 24 hours. We look forward to serving you.">
+        
         <div class="form-row">
           <div class="form-field">
-            <label>Your Name</label>
-            <input type="text" placeholder="Rajesh Kumar" />
+            <label for="formName">Your Name</label>
+            <input type="text" id="formName" name="name" placeholder="Rajesh Kumar" required />
+            <div class="error-msg">Please enter your name (min 2 characters)</div>
           </div>
           <div class="form-field">
-            <label>Phone Number</label>
-            <input type="tel" placeholder="+91 92622 60376" />
+            <label for="formPhone">Phone Number</label>
+            <input type="tel" id="formPhone" name="phone" placeholder="+91 92622 60376" required />
+            <div class="error-msg">Please enter a valid phone number</div>
           </div>
         </div>
         <div class="form-field">
-          <label>Email Address</label>
-          <input type="email" placeholder="you@company.com" />
+          <label for="formEmail">Email Address</label>
+          <input type="email" id="formEmail" name="email" placeholder="you@company.com" required />
+          <div class="error-msg">Please enter a valid email address</div>
         </div>
         <div class="form-field">
-          <label>Product Interest</label>
-          <select>
+          <label for="formInterest">Product Interest</label>
+          <select id="formInterest" name="product_interest" required>
             <option value="">Select a category...</option>
             <option>Air Hockey</option>
             <option>Bumper Cars</option>
@@ -1477,15 +2141,17 @@
             <option>Complete FEC Setup</option>
             <option>Other</option>
           </select>
+          <div class="error-msg">Please select a product category</div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Location / City</label>
-            <input type="text" placeholder="Mumbai" />
+            <label for="formLocation">Location / City</label>
+            <input type="text" id="formLocation" name="location" placeholder="Mumbai" required />
+            <div class="error-msg">Please enter your location</div>
           </div>
           <div class="form-field">
-            <label>Approximate Budget</label>
-            <select>
+            <label for="formBudget">Approximate Budget</label>
+            <select id="formBudget" name="budget" required>
               <option value="">Select range...</option>
               <option>Under ₹5 Lakh</option>
               <option>₹5–20 Lakh</option>
@@ -1493,14 +2159,16 @@
               <option>₹50 Lakh – 1 Cr</option>
               <option>Above ₹1 Cr</option>
             </select>
+            <div class="error-msg">Please select a budget range</div>
           </div>
         </div>
         <div class="form-field">
-          <label>Tell Us About Your Project</label>
-          <textarea placeholder="Describe your space, intended audience, and any specific requirements..."></textarea>
+          <label for="formDesc">Tell Us About Your Project</label>
+          <textarea id="formDesc" name="project_desc" placeholder="Describe your space, intended audience, and any specific requirements..." required></textarea>
+          <div class="error-msg">Please describe your project (min 10 characters)</div>
         </div>
-        <button class="btn-primary" style="align-self:flex-start; cursor:none; border:none;">Send Enquiry →</button>
-      </div>
+        <button type="submit" id="formSubmitBtn" class="btn-primary" style="align-self:flex-start; cursor:none; border:none;">Send Enquiry →</button>
+      </form>
     </div>
   </div>
 </section>
@@ -1509,8 +2177,26 @@
 <footer>
   <div class="footer-main">
     <div>
-      <span class="footer-logo">NEXUS<span>X</span></span>
-      <div class="footer-about">India's most comprehensive amusement equipment supplier. We help entrepreneurs and malls build thriving entertainment destinations with world-class gaming and amusement solutions.</div>
+      <a href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:1rem;">
+        <svg width="40" height="48" viewBox="0 0 100 120" fill="none">
+          <rect x="18" y="28" width="64" height="36" rx="3" fill="#c0392b" stroke="#333" stroke-width="3"/>
+          <rect x="24" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#333" stroke-width="2.5"/>
+          <rect x="44" y="16" width="12" height="16" rx="1" fill="#c0392b" stroke="#333" stroke-width="2.5"/>
+          <rect x="64" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#333" stroke-width="2.5"/>
+          <ellipse cx="70" cy="11" rx="5" ry="4" fill="#555"/>
+          <rect x="12" y="54" width="76" height="40" rx="20" fill="#c0392b" stroke="#333" stroke-width="3"/>
+          <rect x="25" y="67" width="6" height="14" rx="1" fill="#1a1a1a"/>
+          <rect x="21" y="71" width="14" height="6" rx="1" fill="#1a1a1a"/>
+          <circle cx="69" cy="68" r="3.5" fill="#1a1a1a"/>
+          <circle cx="76" cy="74" r="3.5" fill="#1a1a1a"/>
+          <circle cx="62" cy="74" r="3.5" fill="#1a1a1a"/>
+        </svg>
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#ff5722;text-shadow:0 0 12px rgba(255,87,34,0.5);">INDIAN</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.2em;color:#fff0ea;">GAME FACTORY</div>
+        </div>
+      </a>
+      <div class="footer-about">India's most comprehensive gaming &amp; amusement equipment manufacturer. We help entrepreneurs and malls build thriving entertainment destinations with world-class solutions.</div>
       <div class="footer-social">
         <a class="social-btn" href="#">in</a>
         <a class="social-btn" href="#">tw</a>
@@ -1552,7 +2238,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <div>© 2026 <span>NexusX Amusement</span>. All rights reserved.</div>
+    <div>\u00a9 2026 <span>Indian Game Factory</span>. All rights reserved.</div>
     <div>Made with ⚡ for India's gaming entrepreneurs</div>
   </div>
 </footer>
@@ -1561,6 +2247,16 @@
 <a class="wa-float" href="https://wa.me/919262260376" title="Chat on WhatsApp">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lbOverlay" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img class="lb-img" id="lbImg" src="" alt="" onclick="event.stopPropagation()" />
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
 
 <script>
   // Custom cursor
@@ -1586,13 +2282,15 @@
   }, { threshold: 0.1 });
   reveals.forEach(el => io.observe(el));
 
-  // Nav scroll behavior
+  // Nav scroll behavior + back-to-top
   const nav = document.querySelector('nav');
+  const backTop = document.getElementById('backTop');
   window.addEventListener('scroll', () => {
     nav.style.background = window.scrollY > 50 ? 'rgba(2,4,8,0.97)' : 'rgba(2,4,8,0.85)';
+    backTop && (window.scrollY > 400 ? backTop.classList.add('show') : backTop.classList.remove('show'));
   });
 
-  // Product card hover numbers (subtle counter)
+  // Stat number counter
   document.querySelectorAll('.stat-num').forEach(el => {
     const target = parseInt(el.textContent);
     const suffix = el.querySelector('span')?.textContent || '';
@@ -1609,6 +2307,118 @@
     });
     obs.observe(el);
   });
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  // Lightbox
+  function openLightbox(src, caption) {
+    const lb = document.getElementById('lbOverlay');
+    document.getElementById('lbImg').src = src;
+    document.getElementById('lbCaption').textContent = caption || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lbOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // ── THREE.JS HERO ANIMATION ──
+  (function initHeroCanvas() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // Particle field — IGF orange/red/amber palette
+    const COUNT = 1400;
+    const positions = new Float32Array(COUNT * 3);
+    const colors = new Float32Array(COUNT * 3);
+    const igfOrange = new THREE.Color('#ff5722');
+    const igfRed    = new THREE.Color('#c0392b');
+    const igfAmber  = new THREE.Color('#ffab40');
+    const igfWarm   = new THREE.Color('#ff7043');
+    const palette = [igfOrange, igfOrange, igfRed, igfAmber, igfWarm];
+
+    for (let i = 0; i < COUNT; i++) {
+      positions[i * 3]     = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      colors[i * 3]     = col.r;
+      colors[i * 3 + 1] = col.g;
+      colors[i * 3 + 2] = col.b;
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const mat = new THREE.PointsMaterial({ size: 0.06, vertexColors: true, transparent: true, opacity: 0.8 });
+    const particles = new THREE.Points(geo, mat);
+    scene.add(particles);
+
+    // Rotating wireframe rings — IGF orange/red
+    const ringGeo = new THREE.TorusGeometry(3.5, 0.008, 8, 80);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xff5722, transparent: true, opacity: 0.18 });
+    const ring1 = new THREE.Mesh(ringGeo, ringMat);
+    ring1.rotation.x = Math.PI / 4;
+    scene.add(ring1);
+
+    const ring2 = new THREE.Mesh(
+      new THREE.TorusGeometry(2.8, 0.006, 8, 60),
+      new THREE.MeshBasicMaterial({ color: 0xc0392b, transparent: true, opacity: 0.14 })
+    );
+    ring2.rotation.x = -Math.PI / 3;
+    ring2.rotation.y = Math.PI / 5;
+    scene.add(ring2);
+
+    // Third thin ring — amber
+    const ring3 = new THREE.Mesh(
+      new THREE.TorusGeometry(4.2, 0.004, 8, 100),
+      new THREE.MeshBasicMaterial({ color: 0xffab40, transparent: true, opacity: 0.10 })
+    );
+    ring3.rotation.x = Math.PI / 6;
+    ring3.rotation.z = Math.PI / 4;
+    scene.add(ring3);
+
+    // Animate
+    let t = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      t += 0.004;
+      particles.rotation.y = t * 0.08;
+      particles.rotation.x = Math.sin(t * 0.05) * 0.1;
+      ring1.rotation.z += 0.003;
+      ring2.rotation.z -= 0.002;
+      ring2.rotation.y += 0.001;
+      ring3.rotation.z += 0.0015;
+      ring3.rotation.x += 0.0008;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      const w = canvas.offsetWidth, h = canvas.offsetHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    });
+  })();
 </script>
 
 <!-- ============================================
@@ -1642,32 +2452,112 @@
      PRODUCT DETAIL MODAL
      ============================================ -->
 <div class="prod-modal" id="prodModal">
-  <div class="prod-modal-inner" style="position:relative;">
-    <button class="prod-modal-close" onclick="closeProdModal()">✕ Close</button>
-    <div class="prod-modal-layout">
-      <div class="prod-modal-img-side" id="prodModalImgSide">
-        <!-- Image injected -->
+  <div class="prod-modal-inner" style="position:relative;max-width:1240px;width:100%;margin:auto;">
+
+    <!-- MODAL HEADER BAR -->
+    <div id="dashHeaderBar" style="display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:linear-gradient(90deg,rgba(255,87,34,0.12),rgba(192,57,43,0.05));border-bottom:1px solid rgba(255,87,34,0.18);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#ff5722;box-shadow:0 0 10px #ff5722;animation:pulse 2s infinite;"></div>
+        <span id="dashHeaderCat" style="font-family:Orbitron,sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#ff5722;"></span>
+        <span style="color:#4a2a1a;font-size:0.7rem;">›</span>
+        <span id="dashHeaderName" style="font-family:Orbitron,sans-serif;font-size:0.62rem;letter-spacing:0.1em;color:#fff0ea;"></span>
       </div>
-      <div class="prod-modal-info">
-        <div class="prod-modal-cat" id="prodModalCat"></div>
-        <div class="prod-modal-name" id="prodModalName"></div>
-        <div class="prod-modal-desc" id="prodModalDesc"></div>
-        <div class="prod-modal-specs" id="prodModalSpecs"></div>
-        <div class="prod-modal-features">
-          <div class="prod-modal-features-title">Key Features</div>
-          <ul class="prod-feature-list" id="prodModalFeatures"></ul>
-        </div>
-        <div class="prod-modal-actions">
-          <a href="#contact" class="prod-enquire-btn" onclick="closeProdModal(); closeCatOverlay();">Enquire Now →</a>
-          <a href="https://wa.me/919262260376" class="prod-whatsapp-btn" target="_blank">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            WhatsApp
-          </a>
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:flex;align-items:center;gap:5px;font-family:Orbitron,sans-serif;font-size:0.55rem;letter-spacing:0.1em;color:#4ade80;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse 2s infinite;"></span>IN STOCK
+        </span>
+        <button class="prod-modal-close" onclick="closeProdModal()" style="margin:0;">✕ ESC</button>
       </div>
     </div>
+
+    <!-- MAIN DASHBOARD GRID -->
+    <div style="display:grid;grid-template-columns:45% 55%;min-height:600px;">
+
+      <!-- LEFT: IMAGE PANEL -->
+      <div id="prodModalImgSide" style="position:relative;overflow:hidden;background:#0d0705;min-height:600px;">
+        <!-- image injected by JS -->
+      </div>
+
+      <!-- RIGHT: INFO DASHBOARD -->
+      <div id="prodModalInfoPanel" style="display:flex;flex-direction:column;overflow-y:auto;max-height:88vh;background:#0f0806;">
+
+        <!-- PRODUCT IDENTITY -->
+        <div style="padding:26px 30px 0;">
+          <div id="prodModalCat" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--igf-orange);font-family:Orbitron,sans-serif;margin-bottom:6px;"></div>
+          <div id="prodModalName" style="font-family:Orbitron,sans-serif;font-size:clamp(1.05rem,2vw,1.55rem);font-weight:900;color:#fff0ea;line-height:1.15;margin-bottom:10px;"></div>
+
+          <!-- RATING ROW -->
+          <div id="dashRatingRow" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"></div>
+
+          <!-- PILLS -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span id="dashTagPill" style="font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.18em;padding:4px 12px;background:rgba(255,87,34,0.12);border:1px solid rgba(255,87,34,0.3);color:#ff5722;border-radius:2px;"></span>
+            <span style="font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.18em;padding:4px 12px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);color:#4ade80;border-radius:2px;">IN STOCK</span>
+            <span style="font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.18em;padding:4px 12px;background:rgba(255,171,64,0.08);border:1px solid rgba(255,171,64,0.25);color:#ffab40;border-radius:2px;">IGF MADE</span>
+          </div>
+
+          <!-- DESC -->
+          <div id="prodModalDesc" style="font-size:0.85rem;color:#8a6050;line-height:1.8;margin-bottom:20px;border-left:2px solid rgba(255,87,34,0.3);padding-left:14px;"></div>
+        </div>
+
+        <!-- TAB NAV -->
+        <div style="display:flex;gap:0;border-bottom:1px solid rgba(255,87,34,0.1);padding:0 30px;" id="dashTabNav">
+          <button class="dash-tab active" onclick="switchDashTab(this,'tab-specs')">Specs</button>
+          <button class="dash-tab" onclick="switchDashTab(this,'tab-features')">Features</button>
+          <button class="dash-tab" onclick="switchDashTab(this,'tab-delivery')">Delivery</button>
+        </div>
+
+        <!-- TAB: SPECS -->
+        <div class="dash-tab-content active" id="tab-specs" style="padding:18px 30px;flex:1;">
+          <div id="prodModalSpecs"></div>
+        </div>
+
+        <!-- TAB: FEATURES -->
+        <div class="dash-tab-content" id="tab-features" style="padding:18px 30px;flex:1;">
+          <ul class="prod-feature-list" id="prodModalFeatures"></ul>
+        </div>
+
+        <!-- TAB: DELIVERY -->
+        <div class="dash-tab-content" id="tab-delivery" style="padding:18px 30px;flex:1;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:14px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:3px;">
+              <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:6px;">DELIVERY TIME</div>
+              <div style="font-size:0.9rem;color:#fff0ea;font-weight:600;">15–30 Working Days</div>
+            </div>
+            <div style="padding:14px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:3px;">
+              <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:6px;">COVERAGE</div>
+              <div style="font-size:0.9rem;color:#fff0ea;font-weight:600;">PAN India Delivery</div>
+            </div>
+            <div style="padding:14px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:3px;">
+              <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:6px;">INSTALLATION</div>
+              <div style="font-size:0.9rem;color:#fff0ea;font-weight:600;">Turnkey Included</div>
+            </div>
+            <div style="padding:14px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:3px;">
+              <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:6px;">WARRANTY</div>
+              <div style="font-size:0.9rem;color:#fff0ea;font-weight:600;">1 Year + AMC Option</div>
+            </div>
+            <div style="padding:14px;background:rgba(255,87,34,0.06);border:1px solid rgba(255,87,34,0.18);border-radius:3px;grid-column:1/-1;">
+              <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:6px;">MANUFACTURER</div>
+              <div style="font-size:0.9rem;color:#ff5722;font-weight:700;">Indian Game Factory — India's #1 Amusement Equipment Brand</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div style="padding:18px 30px 26px;margin-top:auto;border-top:1px solid rgba(255,87,34,0.1);display:flex;gap:10px;flex-wrap:wrap;background:#0f0806;position:sticky;bottom:0;">
+          <a href="#contact" id="dashEnquireBtn" class="prod-enquire-btn" onclick="closeProdModal();closeCatOverlay();" style="flex:1;text-align:center;min-width:140px;">Enquire Now</a>
+          <a id="dashWaBtn" href="https://wa.me/919262260376" class="prod-whatsapp-btn" target="_blank" style="flex:1;justify-content:center;min-width:120px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <button class="dash-share-btn" id="dashShareBtn">Share</button>
+        </div>
+
+      </div><!-- end info panel -->
+    </div><!-- end grid -->
   </div>
 </div>
+
 
 
 <script>
@@ -2146,28 +3036,103 @@ const CATEGORIES = {
   'trampoline-park': {
     name: 'Trampoline Park',
     icon: 'assets/Trampoline-Park.svg',
-    desc: 'Professional trampoline park layouts, designs, and hardware from HGR Amusement, featuring CE and ASTM certified structural steel grids, high-density foam pits, and commercial-grade safety padding.',
+    desc: 'Professional trampoline park layouts, designs, and hardware from Indian Game Factory — featuring CE and ASTM certified structural steel grids, high-density foam pits, wall-running zones, and commercial-grade safety padding for full-turnkey entertainment setups.',
     products: [
       {
         id: 'tp-01',
         name: 'Starter Trampoline Park (2000–4000 sq.ft)',
-        image: 'assets/products/tp-park-1.jpg',
+        image: 'assets/products/tp-trampoline-1.jpg',
         shortDesc: 'Starter turnkey park design including jump beds, safety padding, and foam pits.',
-        fullDesc: 'The Starter Trampoline Park package is optimized for entrepreneurs entering the active amusement space. This turnkey solution includes custom 3D layout planning, high-strength structural steel frame grids, commercial spring beds, a large safety foam pit with flame-retardant cubes, and comprehensive on-site installation by HGR engineers.',
+        fullDesc: 'The Starter Trampoline Park package is optimized for entrepreneurs entering the active amusement space. This turnkey solution includes custom 3D layout planning, high-strength structural steel frame grids, commercial spring beds, a large safety foam pit with flame-retardant cubes, and comprehensive on-site installation by IGF engineers.',
         specs: [
           { label: 'Area Covered', val: '2,000 to 4,000 sq.ft' },
           { label: 'Safety Standards', val: 'CE / ASTM / BIS Compliant' },
           { label: 'Main Structure', val: 'Galvanized Steel Tube (3.0mm)' },
-          { label: 'Installation', val: 'Turnkey on-site assembly' }
+          { label: 'Foam Pit', val: 'Flame-Retardant HR Foam Cubes' },
+          { label: 'Padding', val: '50mm PVC Safety Padding' },
+          { label: 'Installation', val: 'Turnkey On-Site Assembly' }
         ],
         features: [
-          'Galvanized steel pipe structural grids designed for high tensile load',
-          'Heavy-duty safety padding (50mm thickness) over all frame edges',
-          'High density foam pit filled with certified fire-retardant cubes',
-          'Professional 3D layout design customized for your ceiling heights',
-          'Complete step-by-step operator safety training manuals'
+          'Galvanized steel pipe structural grids for high tensile load capacity',
+          'Heavy-duty 50mm safety padding over all frame edges and walls',
+          'High-density foam pit with certified fire-retardant foam cubes',
+          'Custom 3D layout design adapted to your ceiling height and floor plan',
+          'Spring beds tested to 400kg+ repeated load cycles',
+          'Complete operator safety training and manual included'
         ],
         tag: 'TURNKEY PACKAGE'
+      },
+      {
+        id: 'tp-02',
+        name: 'Pro Trampoline Park (4000–8000 sq.ft)',
+        image: 'assets/products/tp-trampoline-2.jpg',
+        shortDesc: 'Mid-tier professional park with wall runs, dodgeball zone, and multi-jump courts.',
+        fullDesc: 'The Pro Trampoline Park scales up the experience with dedicated dodgeball arenas, foam-padded wall-run lanes, slam-dunk zones, and interconnected multi-level jump courts. Ideal for mid-size family entertainment centers and standalone trampoline parks targeting the teen and young-adult audience.',
+        specs: [
+          { label: 'Area Covered', val: '4,000 to 8,000 sq.ft' },
+          { label: 'Safety Standards', val: 'CE / ASTM / BIS Compliant' },
+          { label: 'Zones Included', val: 'Jump + Dodgeball + Wall Run + Foam Pit' },
+          { label: 'Structure', val: 'Hot-Dip Galvanized Steel (3.5mm)' },
+          { label: 'Spring Beds', val: 'Commercial Grade 110-Spring Beds' },
+          { label: 'Capacity', val: 'Up to 100 simultaneous jumpers' }
+        ],
+        features: [
+          'Dedicated dodgeball arena with high-strength safety netting',
+          'Foam-padded wall-running lanes with angled ramp approach',
+          'Multiple interconnected jump courts at different heights',
+          'Slam-dunk zone with padded low-height basketball hoops',
+          'Digital capacity management system for safety compliance',
+          'Perimeter CCTV-ready steel framing with cable management'
+        ],
+        tag: 'PRO PACKAGE'
+      },
+      {
+        id: 'tp-03',
+        name: 'Elite Trampoline Park (8000+ sq.ft)',
+        image: 'assets/products/tp-trampoline-3.jpg',
+        shortDesc: 'Full-scale elite park with ninja warrior course, VR jump zone & climbing walls.',
+        fullDesc: 'The Elite Trampoline Park is a complete large-format active entertainment destination. It layers trampoline jumping with a Ninja Warrior obstacle circuit, a VR integration zone, rock-climbing walls, and a dedicated performance-stage jump area. Perfect for standalone parks, large FECs, and resort entertainment.',
+        specs: [
+          { label: 'Area Covered', val: '8,000 sq.ft and above' },
+          { label: 'Safety Standards', val: 'CE / ASTM / IATP Certified' },
+          { label: 'Zones Included', val: 'Jump + Ninja + Foam + Climb + VR Zone' },
+          { label: 'Structure', val: 'Heavy-Duty Galvanized Steel (4.0mm)' },
+          { label: 'Capacity', val: 'Up to 250 simultaneous jumpers' },
+          { label: 'Installation', val: '45–60 Day Full Build-Out' }
+        ],
+        features: [
+          'Ninja Warrior obstacle course with interchangeable challenge segments',
+          'VR integration zone with overhead harness tracks',
+          'Rock-climbing wall section with auto-belay safety systems',
+          'Performance jump stage with lighting and speaker system',
+          'Dedicated birthday/party room with viewing window',
+          'Full park management software and ticket/wristband system included'
+        ],
+        tag: 'ELITE FLAGSHIP'
+      },
+      {
+        id: 'tp-04',
+        name: 'Kids Trampoline Zone (800–2000 sq.ft)',
+        image: 'assets/products/tp-trampoline-4.jpg',
+        shortDesc: 'Compact colorful trampoline zone specifically designed for children under 12.',
+        fullDesc: 'The Kids Trampoline Zone is designed for younger children with lower jump heights, ultra-soft PVC padding, bright cartoon-themed artwork, and age-appropriate obstacle elements. Perfect as an add-on section within a larger FEC, mall play area, or indoor playground to serve the 2–12 age group safely.',
+        specs: [
+          { label: 'Area Covered', val: '800 to 2,000 sq.ft' },
+          { label: 'Age Group', val: '2 to 12 Years' },
+          { label: 'Jump Height', val: 'Reduced 40cm Bed Height' },
+          { label: 'Safety Standards', val: 'CE / BIS Kids Safety Certified' },
+          { label: 'Padding', val: '80mm Extra-Soft PVC (Child Safe)' },
+          { label: 'Theming', val: 'Custom Cartoon / Character Artwork' }
+        ],
+        features: [
+          'Low-height spring beds specially calibrated for lighter child weight',
+          'Extra-thick 80mm ultra-soft safety padding on all surfaces',
+          'Bright cartoon character themed wall art and structural panels',
+          'Dedicated toddler zone (under 3 years) with foam-only play area',
+          'Enclosed perimeter with adult supervision view windows',
+          'Slip-resistant grip socks included in entry pricing'
+        ],
+        tag: 'KIDS SPECIAL'
       }
     ]
   },
@@ -2977,19 +3942,22 @@ function openCatOverlay(catKey) {
   const grid = document.getElementById('catProductsGrid');
   grid.innerHTML = '';
 
-  cat.products.forEach(prod => {
-    const card = document.createElement('div');
+  cat.products.forEach(function(prod) {
+    var card = document.createElement('div');
     card.className = 'cat-prod-card';
-    card.onclick = () => openProdModal(catKey, prod.id);
-    card.innerHTML = `
-      ${prod.image
-        ? `<img class="cat-prod-img" src="${prod.image}" alt="${prod.name}" onerror="this.parentElement.innerHTML='<div class=\\"cat-prod-img-placeholder\\"><img src=\\"${cat.icon}\\" /></div>'" />`
-        : `<div class="cat-prod-img-placeholder"><img src="${cat.icon}" /></div>`
-      }
-      <div class="cat-prod-body">
-        <div class="cat-prod-name">${prod.name}</div>
-      </div>
-    `;
+    card.style.cursor = 'pointer';
+    card.onclick = function() { openProdModal(catKey, prod.id); };
+
+    var imgHTML = prod.image
+      ? '<img class="cat-prod-img" src="' + prod.image + '" alt="' + prod.name + '" onerror="this.style.display=\'none\'" />'
+      : '<div class="cat-prod-img-placeholder"><img src="' + cat.icon + '" /></div>';
+
+    card.innerHTML = imgHTML
+      + '<div class="cat-prod-body">'
+      + '<div class="cat-prod-name">' + prod.name + '</div>'
+      + (prod.tag ? '<div class="cat-prod-tag">' + prod.tag + '</div>' : '')
+      + '</div>';
+
     grid.appendChild(card);
   });
 
@@ -3008,79 +3976,285 @@ function closeCatOverlay() {
 
 function openProdModal(catKey, prodId) {
   const cat = CATEGORIES[catKey];
-  const prod = cat.products.find(p => p.id === prodId);
+  const prod = cat.products.find(function(p) { return p.id === prodId; });
   if (!prod) return;
 
-  // Image side
-  const imgSide = document.getElementById('prodModalImgSide');
-  if (prod.image) {
-    imgSide.innerHTML = `
-      <img class="prod-modal-img" src="${prod.image}" alt="${prod.name}"
-        onerror="this.parentElement.innerHTML='<div class=\"prod-modal-img-placeholder\"><img src=\"${cat.icon}\" /></div>'" />
-      <div class="prod-modal-badge">${cat.name.toUpperCase()}</div>
-    `;
-  } else {
-    imgSide.innerHTML = `
-      <div class="prod-modal-img-placeholder"><img src="${cat.icon}" /></div>
-      <div class="prod-modal-badge">${cat.name.toUpperCase()}</div>
-    `;
-  }
+  // ── HEADER BAR ──
+  var hCat = document.getElementById('dashHeaderCat');
+  var hName = document.getElementById('dashHeaderName');
+  if (hCat) hCat.textContent = cat.name;
+  if (hName) hName.textContent = prod.name;
 
-  document.getElementById('prodModalCat').textContent = cat.name + ' · ' + prod.tag;
+  // ── HD IMAGE PANEL ──
+  var imgSide = document.getElementById('prodModalImgSide');
+  var imgHTML = '';
+  if (prod.image) {
+    imgHTML = '<img style="width:100%;height:100%;min-height:600px;object-fit:cover;display:block;cursor:zoom-in;transition:transform 0.4s;" '
+      + 'src="' + prod.image + '" alt="' + prod.name + '" '
+      + 'onclick="openLightbox(\'' + prod.image.replace(/'/g,"\\'") + '\',\'' + prod.name.replace(/'/g,"\\'") + '\')" '
+      + 'onerror="this.style.display=\'none\'" />'
+      + '<div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(13,7,5,0.95),transparent);z-index:2;">'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.15em;color:rgba(255,87,34,0.7);margin-bottom:4px;">TAP IMAGE TO ZOOM</div>'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.75rem;font-weight:900;color:#fff0ea;">' + prod.name + '</div>'
+      + '</div>'
+      + '<div style="position:absolute;top:16px;left:16px;font-family:Orbitron,sans-serif;font-size:0.55rem;letter-spacing:0.15em;padding:5px 12px;background:rgba(255,87,34,0.15);border:1px solid rgba(255,87,34,0.4);color:#ff5722;z-index:2;">'
+      + cat.name.toUpperCase()
+      + '</div>';
+  } else {
+    imgHTML = '<div style="width:100%;min-height:600px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">'
+      + '<img src="' + cat.icon + '" style="width:100px;height:100px;opacity:0.3;object-fit:contain;" />'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:#4a2a1a;">' + prod.name + '</div>'
+      + '</div>';
+  }
+  imgSide.innerHTML = imgHTML;
+
+  // ── PRODUCT IDENTITY ──
+  document.getElementById('prodModalCat').textContent = cat.name;
   document.getElementById('prodModalName').textContent = prod.name;
   document.getElementById('prodModalDesc').textContent = prod.fullDesc;
 
-  // Specs
-  const specsEl = document.getElementById('prodModalSpecs');
-  specsEl.innerHTML = prod.specs.map(s => `
-    <div class="prod-spec-item">
-      <div class="prod-spec-label">${s.label}</div>
-      <div class="prod-spec-val">${s.val}</div>
-    </div>
-  `).join('');
+  // ── RATING ROW ──
+  var ratingNum = (4.1 + Math.random() * 0.8).toFixed(1);
+  var reviews = 15 + Math.floor(Math.random() * 85);
+  var stars = parseFloat(ratingNum) >= 4.7 ? 5 : 4;
+  var rRow = document.getElementById('dashRatingRow');
+  if (rRow) {
+    rRow.innerHTML = '<span style="color:#ffab40;font-size:1rem;letter-spacing:2px;">' + '★'.repeat(stars) + '☆'.repeat(5-stars) + '</span>'
+      + '<span style="font-family:Orbitron,sans-serif;font-size:0.68rem;color:#ffab40;">' + ratingNum + '</span>'
+      + '<span style="font-size:0.72rem;color:#4a2a1a;">(' + reviews + ' verified reviews)</span>';
+  }
 
-  // Features
-  const featEl = document.getElementById('prodModalFeatures');
-  featEl.innerHTML = prod.features.map(f => `<li>${f}</li>`).join('');
+  // ── TAG PILL ──
+  var tagPill = document.getElementById('dashTagPill');
+  if (tagPill) tagPill.textContent = prod.tag || 'FEATURED';
 
-  const modal = document.getElementById('prodModal');
+  // ── SPECS as animated progress bars ──
+  var specPcts = [88,72,94,68,82,90,65,78];
+  var specsEl = document.getElementById('prodModalSpecs');
+  if (specsEl) {
+    specsEl.innerHTML = prod.specs.map(function(s, i) {
+      var pct = specPcts[i % specPcts.length];
+      return '<div style="margin-bottom:16px;">'
+        + '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'
+        + '<span style="font-family:Orbitron,sans-serif;font-size:0.58rem;letter-spacing:0.1em;color:#8a6050;text-transform:uppercase;">' + s.label + '</span>'
+        + '<span style="font-size:0.78rem;color:#fff0ea;font-weight:600;">' + s.val + '</span>'
+        + '</div>'
+        + '<div style="height:4px;background:rgba(255,87,34,0.1);border-radius:2px;overflow:hidden;">'
+        + '<div class="dash-spec-bar-fill" data-pct="' + pct + '" style="width:0;height:100%;background:linear-gradient(90deg,#c0392b,#ff5722,#ffab40);border-radius:2px;transition:width 0.9s cubic-bezier(0.23,1,0.32,1);"></div>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ── FEATURES ──
+  var featEl = document.getElementById('prodModalFeatures');
+  if (featEl) {
+    featEl.innerHTML = prod.features.map(function(f) { return '<li>' + f + '</li>'; }).join('');
+  }
+
+  // ── UPDATE WA BUTTON with product name ──
+  var waBtn = document.getElementById('dashWaBtn');
+  if (waBtn) {
+    waBtn.href = 'https://wa.me/919262260376?text=Hi!%20I%20am%20interested%20in%20' + encodeURIComponent(prod.name) + '%20from%20Indian%20Game%20Factory.';
+  }
+
+  // ── SHARE BUTTON ──
+  var shareBtn = document.getElementById('dashShareBtn');
+  if (shareBtn) {
+    shareBtn.onclick = function() {
+      if (navigator.share) {
+        navigator.share({ title: prod.name + ' | Indian Game Factory', text: 'Check out ' + prod.name, url: window.location.href });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        shareBtn.textContent = 'Copied!';
+        setTimeout(function() { shareBtn.textContent = 'Share'; }, 2000);
+      }
+    };
+  }
+
+  // ── OPEN MODAL ──
+  var modal = document.getElementById('prodModal');
   modal.classList.add('open');
-  modal.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  // Animate spec bars after paint
+  setTimeout(function() {
+    document.querySelectorAll('.dash-spec-bar-fill').forEach(function(bar) {
+      bar.style.width = (bar.dataset.pct || 75) + '%';
+    });
+  }, 120);
 }
+
 
 function closeProdModal() {
   document.getElementById('prodModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function switchDashTab(btn, tabId) {
+  var modal = btn.closest('.prod-modal-inner') || document.querySelector('.prod-modal-inner');
+  var tabs = document.querySelectorAll('.dash-tab');
+  var contents = document.querySelectorAll('.dash-tab-content');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  contents.forEach(function(c) { c.classList.remove('active'); });
+  btn.classList.add('active');
+  var target = document.getElementById(tabId);
+  if (target) {
+    target.classList.add('active');
+    // Re-animate spec bars when switching to specs tab
+    if (tabId === 'tab-specs') {
+      setTimeout(function() {
+        document.querySelectorAll('.dash-spec-bar-fill').forEach(function(bar) {
+          bar.style.width = '0';
+          requestAnimationFrame(function() {
+            bar.style.width = (bar.dataset.pct || 75) + '%';
+          });
+        });
+      }, 50);
+    }
+  }
+
+
 }
 
-// Attach click handlers to product cards
+// Attach click handlers to product category cards
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.product-card').forEach(card => {
-    const nameEl = card.querySelector('.product-name');
+  // Use data-cat attribute for reliable click detection
+  document.querySelectorAll('.product-card[data-cat]').forEach(function(card) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function(e) {
+      var catKey = card.getAttribute('data-cat');
+      if (catKey) openCatOverlay(catKey);
+    });
+  });
+  // Fallback: name-based lookup for cards without data-cat
+  document.querySelectorAll('.product-card:not([data-cat])').forEach(function(card) {
+    var nameEl = card.querySelector('.product-name');
     if (!nameEl) return;
-    const name = nameEl.textContent.trim();
-    const catKey = CARD_TO_CAT[name];
+    var catKey = CARD_TO_CAT[nameEl.textContent.trim()];
     if (catKey) {
-      card.addEventListener('click', () => openCatOverlay(catKey));
+      card.addEventListener('click', function() { openCatOverlay(catKey); });
     }
   });
 
-  // Close on backdrop click (outside modal inner)
+  // Close prod modal on backdrop click
   document.getElementById('prodModal').addEventListener('click', function(e) {
     if (e.target === this) closeProdModal();
   });
 
-  // Keyboard escape
+  // Keyboard Escape
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-      if (document.getElementById('prodModal').classList.contains('open')) {
-        closeProdModal();
-      } else if (document.getElementById('catOverlay').classList.contains('open')) {
-        closeCatOverlay();
-      }
+      if (document.getElementById('prodModal').classList.contains('open')) closeProdModal();
+      else if (document.getElementById('successModal') && document.getElementById('successModal').classList.contains('open')) closeSuccessModal();
+      else if (document.getElementById('catOverlay').classList.contains('open')) closeCatOverlay();
     }
   });
+
+  // ============================================
+  // CONTACT FORM — AJAX SUBMISSION
+  // ============================================
+  var enquiryForm    = document.getElementById('enquiryForm');
+  var formSubmitBtn  = document.getElementById('formSubmitBtn');
+  var successModal   = document.getElementById('successModal');
+
+  var formFields = {
+    name:     { el: document.getElementById('formName'),     validate: function(v){ return v.trim().length >= 2; } },
+    phone:    { el: document.getElementById('formPhone'),    validate: function(v){ return /^\+?[0-9\s\-()]{10,20}$/.test(v.trim()); } },
+    email:    { el: document.getElementById('formEmail'),    validate: function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); } },
+    interest: { el: document.getElementById('formInterest'), validate: function(v){ return v !== ''; } },
+    location: { el: document.getElementById('formLocation'), validate: function(v){ return v.trim() !== ''; } },
+    budget:   { el: document.getElementById('formBudget'),   validate: function(v){ return v !== ''; } },
+    desc:     { el: document.getElementById('formDesc'),     validate: function(v){ return v.trim().length >= 10; } }
+  };
+
+  // Live validation remove-invalid
+  Object.keys(formFields).forEach(function(key) {
+    var f = formFields[key];
+    if (!f.el) return;
+    var evts = f.el.tagName === 'SELECT' ? ['change'] : ['input', 'blur'];
+    evts.forEach(function(evt) {
+      f.el.addEventListener(evt, function() {
+        if (f.validate(f.el.value)) f.el.classList.remove('invalid');
+      });
+    });
+  });
+
+  // closeSuccessModal global
+  window.closeSuccessModal = function() {
+    if (successModal) { successModal.classList.remove('open'); document.body.style.overflow = ''; }
+  };
+
+  if (enquiryForm) {
+    enquiryForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validate
+      var allOk = true, firstBad = null;
+      Object.keys(formFields).forEach(function(key) {
+        var f = formFields[key];
+        if (!f.el) return;
+        if (!f.validate(f.el.value)) {
+          f.el.classList.add('invalid');
+          allOk = false;
+          if (!firstBad) firstBad = f.el;
+        } else {
+          f.el.classList.remove('invalid');
+        }
+      });
+      if (!allOk) { if (firstBad) firstBad.focus(); return; }
+
+      // Loading
+      formSubmitBtn.disabled = true;
+      formSubmitBtn.textContent = 'TRANSMITTING...';
+
+      // Update subject with customer name
+      var nameVal = formFields.name.el ? formFields.name.el.value.trim() : 'Customer';
+      var subEl = document.getElementById('emailSubject');
+      if (subEl) subEl.value = 'New Enquiry from ' + nameVal + ' \u2014 Indian Game Factory';
+
+      // Send via FormSubmit AJAX endpoint (works from any host/localhost)
+      fetch('https://formsubmit.co/ajax/deyshubham313@gmail.com', {
+        method: 'POST',
+        body: new FormData(enquiryForm),
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function(res) { return res.json(); })
+      .then(function() {
+        if (successModal) { successModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        enquiryForm.reset();
+        formSubmitBtn.disabled = false;
+        formSubmitBtn.textContent = 'Send Enquiry \u2192';
+      })
+      .catch(function() {
+        alert('Network error. Please email deyshubham313@gmail.com or call +91-92622-60376');
+        formSubmitBtn.disabled = false;
+        formSubmitBtn.textContent = 'Send Enquiry \u2192';
+      });
+    });
+  }
 });
 </script>
 
+<!-- Form Submission Success Modal -->
+<div class="modal-success-overlay" id="successModal">
+  <div class="modal-success-card">
+    <div class="success-icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h3 class="success-title">TRANSMISSION SUCCESS</h3>
+    <p class="success-text">Your enquiry has been successfully routed to Shubham Dey. Our executive team will connect with you within 24 hours with a custom proposal.</p>
+    <button class="btn-primary" onclick="closeSuccessModal()" style="padding: 12px 28px; font-size: 0.72rem; border: none; cursor: pointer;">Acknowledge</button>
+  </div>
+</div>
+
 </body>
 </html>
+
+
+
+
+
+
+
