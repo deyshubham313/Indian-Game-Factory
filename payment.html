@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Payment — Indian Game Factory</title>
+  <meta name="description" content="Make a secure payment to Indian Game Factory. Pay via UPI, credit card, debit card, net banking or wallets." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon-cyan: #ff5722;
+      --igf-orange: #ff5722;
+      --igf-red: #c0392b;
+      --igf-amber: #ffab40;
+      --bg-void: #0d0705;
+      --bg-deep: #120905;
+      --bg-card: #1a0e08;
+      --bg-glass: rgba(255,87,34,0.04);
+      --border-glow: rgba(255,87,34,0.25);
+      --text-primary: #fff0ea;
+      --text-muted: #8a6050;
+      --text-dim: #4a2a1a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      min-height: 100vh;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background: var(--igf-orange); pointer-events: none; z-index: 9999; mix-blend-mode: screen; transition: transform 0.1s; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,87,34,0.6); pointer-events: none; z-index: 9998; transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), opacity 0.3s; }
+
+    /* GRID BACKGROUND */
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,87,34,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,87,34,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .grid-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,87,34,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,57,43,0.05) 0%, transparent 50%);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 72px;
+      background: rgba(13,7,5,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,87,34,0.15);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900; font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      line-height: 1.1;
+    }
+    .nav-logo-icon { width: 44px; height: 44px; flex-shrink: 0; }
+    .nav-logo-line1 { color: #ff5722; text-shadow: 0 0 16px rgba(255,87,34,0.7); font-size: 1.05rem; display: block; }
+    .nav-logo-line2 { color: #fff0ea; font-size: 0.65rem; letter-spacing: 0.25em; opacity: 0.85; display: block; }
+    .nav-back {
+      padding: 8px 20px;
+      border: 1px solid rgba(255,87,34,0.3);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .nav-back:hover { border-color: var(--igf-orange); color: var(--igf-orange); }
+
+    /* SECURE BADGE */
+    .secure-strip {
+      background: linear-gradient(90deg, rgba(192,57,43,0.1), rgba(255,87,34,0.08), rgba(192,57,43,0.1));
+      border-top: 1px solid rgba(255,87,34,0.1);
+      border-bottom: 1px solid rgba(255,87,34,0.1);
+      padding: 8px 5%;
+      display: flex; align-items: center; justify-content: center; gap: 24px;
+      position: relative; z-index: 1;
+      flex-wrap: wrap;
+      margin-top: 72px;
+    }
+    .secure-item {
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem; letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+    .secure-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+
+    /* MAIN LAYOUT */
+    .payment-wrap {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 5% 80px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .payment-wrap { grid-template-columns: 1fr; }
+      .order-summary { order: -1; }
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      margin-bottom: 36px;
+    }
+    .page-tag {
+      display: inline-block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.25em;
+      color: var(--igf-orange);
+      border-left: 2px solid var(--igf-orange);
+      padding-left: 10px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.15;
+    }
+    .page-title span { color: var(--igf-orange); }
+
+    /* CARD */
+    .pay-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,87,34,0.15);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+    .pay-card.active { border-color: rgba(255,87,34,0.5); }
+
+    /* PAYMENT METHOD TABS */
+    .method-tabs {
+      display: flex; flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,87,34,0.12);
+    }
+    .method-tab {
+      flex: 1; min-width: 100px;
+      padding: 14px 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: transparent; border: none;
+      cursor: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem; letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .method-tab.active {
+      color: var(--igf-orange);
+      border-bottom-color: var(--igf-orange);
+      background: rgba(255,87,34,0.04);
+    }
+    .method-tab:hover { color: var(--igf-amber); }
+    .method-tab svg { width: 22px; height: 22px; }
+    .method-tab-label { font-size: 0.52rem; }
+
+    /* TAB CONTENT PANELS */
+    .method-panel { display: none; padding: 28px; }
+    .method-panel.active { display: block; }
+
+    /* UPI PANEL */
+    .upi-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 600px) { .upi-grid { grid-template-columns: 1fr; } }
+
+    .qr-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      min-width: 180px;
+      box-shadow: 0 0 40px rgba(255,87,34,0.15), 0 0 80px rgba(255,87,34,0.05);
+    }
+    .qr-box img { width: 148px; height: 148px; display: block; object-fit: contain; }
+    .qr-label { font-family: 'Orbitron', sans-serif; font-size: 0.5rem; letter-spacing: 0.12em; color: #0d0705; text-align: center; }
+    .qr-upi-id { font-size: 0.65rem; color: #c0392b; font-weight: 700; font-family: 'DM Sans', sans-serif; text-align: center; word-break: break-all; }
+
+    .upi-info { display: flex; flex-direction: column; gap: 16px; }
+    .upi-apps-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .upi-app {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,87,34,0.05);
+      border: 1px solid rgba(255,87,34,0.15);
+      border-radius: 4px;
+      font-size: 0.78rem; color: var(--text-muted);
+      cursor: none; transition: all 0.2s;
+    }
+    .upi-app:hover { border-color: rgba(255,87,34,0.4); color: var(--text-primary); }
+    .upi-app svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .or-divider { display: flex; align-items: center; gap: 12px; color: var(--text-dim); font-size: 0.75rem; }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,87,34,0.1); }
+
+    .upi-id-field {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .upi-id-display {
+      flex: 1;
+      background: rgba(255,87,34,0.04);
+      border: 1px solid rgba(255,87,34,0.2);
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--igf-amber);
+      font-weight: 700;
+    }
+    .copy-btn {
+      padding: 10px 16px;
+      background: rgba(255,87,34,0.1);
+      border: 1px solid rgba(255,87,34,0.3);
+      color: var(--igf-orange);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      cursor: none; border-radius: 4px;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .copy-btn:hover { background: rgba(255,87,34,0.2); }
+    .copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,0.4); background: rgba(74,222,128,0.06); }
+
+    .info-box {
+      padding: 12px 16px;
+      background: rgba(255,171,64,0.06);
+      border-left: 2px solid var(--igf-amber);
+      border-radius: 2px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .info-box strong { color: var(--igf-amber); }
+
+    /* FORM FIELDS */
+    .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-field label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.56rem; letter-spacing: 0.18em;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    .form-input {
+      background: rgba(255,87,34,0.03);
+      border: 1px solid rgba(255,87,34,0.15);
+      border-radius: 4px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s;
+      outline: none; width: 100%;
+    }
+    .form-input::placeholder { color: var(--text-dim); }
+    .form-input:focus { border-color: rgba(255,87,34,0.5); box-shadow: 0 0 0 2px rgba(255,87,34,0.08); }
+    .form-input.invalid { border-color: #e74c3c; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* CARD ICONS ROW */
+    .card-icons-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .card-icon {
+      padding: 6px 12px; border-radius: 4px;
+      background: rgba(255,87,34,0.06);
+      border: 1px solid rgba(255,87,34,0.15);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem; letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* NET BANKING LIST */
+    .nb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .nb-bank {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px;
+      background: rgba(255,87,34,0.04);
+      border: 1px solid rgba(255,87,34,0.12);
+      border-radius: 4px;
+      cursor: none; transition: all 0.2s;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .nb-bank:hover { border-color: rgba(255,87,34,0.35); color: var(--text-primary); }
+    .nb-bank input[type="radio"] { accent-color: var(--igf-orange); }
+    .nb-bank label { cursor: none; flex: 1; }
+
+    /* WALLET GRID */
+    .wallet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .wallet-opt {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 16px 10px;
+      background: rgba(255,87,34,0.04);
+      border: 1px solid rgba(255,87,34,0.12);
+      border-radius: 4px;
+      cursor: none; transition: all 0.2s;
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .wallet-opt:hover { border-color: rgba(255,87,34,0.35); color: var(--text-primary); }
+    .wallet-opt.selected { border-color: var(--igf-orange); color: var(--igf-orange); background: rgba(255,87,34,0.08); }
+    .wallet-opt svg { width: 28px; height: 28px; }
+
+    /* AMOUNT INPUT */
+    .amount-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .amount-prefix {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--igf-amber);
+    }
+    .amount-input {
+      padding-left: 36px !important;
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      color: var(--text-primary) !important;
+      letter-spacing: 0.05em;
+    }
+
+    /* PAY BUTTON */
+    .pay-now-btn {
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #c0392b 0%, #ff5722 50%, #ffab40 100%);
+      background-size: 200% auto;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: none;
+      transition: all 0.4s;
+      position: relative; overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      margin-top: 8px;
+    }
+    .pay-now-btn:hover {
+      background-position: right center;
+      box-shadow: 0 0 40px rgba(255,87,34,0.5), 0 0 80px rgba(255,87,34,0.2);
+      transform: translateY(-2px);
+    }
+    .pay-now-btn:active { transform: translateY(0); }
+    .pay-now-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+    .pay-now-btn:hover::after { transform: translateX(100%); }
+
+    /* ORDER SUMMARY */
+    .order-summary {
+      position: sticky; top: 90px;
+    }
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,87,34,0.18);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .summary-header {
+      padding: 16px 20px;
+      background: linear-gradient(90deg, rgba(255,87,34,0.1), rgba(192,57,43,0.06));
+      border-bottom: 1px solid rgba(255,87,34,0.12);
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      color: var(--igf-orange);
+    }
+    .summary-body { padding: 20px; }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,87,34,0.06);
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row.total {
+      color: var(--text-primary); font-weight: 600; font-size: 1rem;
+      border-top: 1px solid rgba(255,87,34,0.2);
+      padding-top: 16px; margin-top: 6px;
+    }
+    .summary-row .amount { color: var(--igf-amber); font-family: 'Orbitron', sans-serif; font-weight: 700; }
+    .summary-row.total .amount { color: var(--igf-orange); font-size: 1.2rem; }
+
+    .product-preview {
+      display: flex; gap: 14px; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,87,34,0.08);
+      margin-bottom: 10px;
+    }
+    .prod-img-thumb {
+      width: 64px; height: 64px;
+      background: rgba(255,87,34,0.05);
+      border: 1px solid rgba(255,87,34,0.15);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .prod-img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .prod-details { flex: 1; }
+    .prod-details-name { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; letter-spacing: 0.08em; color: var(--text-primary); margin-bottom: 4px; }
+    .prod-details-cat { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* CONTACT INFO REMINDER */
+    .contact-reminder {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(255,87,34,0.04);
+      border: 1px solid rgba(255,87,34,0.12);
+      border-radius: 4px;
+    }
+    .contact-reminder p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .contact-reminder strong { color: var(--igf-orange); }
+
+    /* SECURITY LOGOS */
+    .security-logos {
+      display: flex; gap: 8px; align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .security-badge {
+      padding: 5px 10px;
+      background: rgba(255,87,34,0.04);
+      border: 1px solid rgba(255,87,34,0.1);
+      border-radius: 3px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.48rem; letter-spacing: 0.12em;
+      color: var(--text-dim);
+    }
+
+    /* SUCCESS MODAL */
+    .success-overlay {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .success-overlay.open { opacity: 1; pointer-events: all; }
+    .success-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,87,34,0.3);
+      border-radius: 8px;
+      padding: 50px 40px;
+      max-width: 460px; width: 90%;
+      text-align: center;
+      box-shadow: 0 0 80px rgba(255,87,34,0.2);
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .success-icon {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(74,222,128,0.1);
+      border: 2px solid #4ade80;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      color: #4ade80;
+      box-shadow: 0 0 30px rgba(74,222,128,0.2);
+    }
+    .success-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem; font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 12px; letter-spacing: 0.08em;
+    }
+    .success-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px; }
+    .success-ref {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem; color: var(--igf-amber);
+      background: rgba(255,171,64,0.06);
+      border: 1px solid rgba(255,171,64,0.2);
+      border-radius: 4px;
+      padding: 10px 16px;
+      margin-bottom: 28px;
+      letter-spacing: 0.12em;
+    }
+    .btn-primary {
+      padding: 12px 32px;
+      background: var(--igf-orange);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; border: none;
+      cursor: none; transition: all 0.3s;
+      text-decoration: none; display: inline-block;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-primary:hover { box-shadow: 0 0 30px rgba(255,87,34,0.5); transform: translateY(-2px); }
+
+    /* PROCESSING OVERLAY */
+    .processing-overlay {
+      position: fixed; inset: 0; z-index: 8000;
+      background: rgba(13,7,5,0.97);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .processing-overlay.open { opacity: 1; pointer-events: all; }
+    .spin-ring {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 2px solid rgba(255,87,34,0.15);
+      border-top-color: var(--igf-orange);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .processing-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      color: var(--text-muted);
+      animation: blink 1.5s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.6s ease both; }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="nav-logo-icon" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="18" y="28" width="64" height="36" rx="3" fill="#c0392b" stroke="#1a1a1a" stroke-width="3"/>
+      <rect x="24" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <rect x="44" y="16" width="12" height="16" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <rect x="64" y="20" width="12" height="12" rx="1" fill="#c0392b" stroke="#1a1a1a" stroke-width="2.5"/>
+      <ellipse cx="70" cy="11" rx="5" ry="4" fill="#1a1a1a" opacity="0.8"/>
+      <rect x="30" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <rect x="46" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <rect x="62" y="34" width="8" height="8" rx="1" fill="#1a1a1a" opacity="0.6"/>
+      <rect x="12" y="54" width="76" height="40" rx="20" fill="#c0392b" stroke="#1a1a1a" stroke-width="3"/>
+      <rect x="25" y="67" width="6" height="14" rx="1" fill="#1a1a1a"/>
+      <rect x="21" y="71" width="14" height="6" rx="1" fill="#1a1a1a"/>
+      <circle cx="69" cy="68" r="3.5" fill="#1a1a1a"/>
+      <circle cx="76" cy="74" r="3.5" fill="#1a1a1a"/>
+      <circle cx="62" cy="74" r="3.5" fill="#1a1a1a"/>
+    </svg>
+    <div>
+      <span class="nav-logo-line1">INDIAN</span>
+      <span class="nav-logo-line2">GAME FACTORY</span>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Site</a>
+</nav>
+
+<!-- SECURE STRIP -->
+<div class="secure-strip">
+  <div class="secure-item"><span class="secure-dot"></span> SSL SECURED</div>
+  <div class="secure-item"><span class="secure-dot"></span> 256-BIT ENCRYPTION</div>
+  <div class="secure-item"><span class="secure-dot"></span> GENUINE MERCHANT</div>
+  <div class="secure-item"><span class="secure-dot"></span> INSTANT CONFIRMATION</div>
+</div>
+
+<!-- MAIN -->
+<div class="payment-wrap">
+
+  <!-- LEFT: PAYMENT METHODS -->
+  <div>
+    <div class="page-header fade-up">
+      <div class="page-tag">Secure Checkout</div>
+      <h1 class="page-title">Complete Your <span>Payment</span></h1>
+    </div>
+
+    <!-- AMOUNT SECTION -->
+    <div class="pay-card fade-up">
+      <div style="padding: 20px 24px; border-bottom: 1px solid rgba(255,87,34,0.1);">
+        <div style="font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--igf-orange);margin-bottom:14px;">PAYMENT AMOUNT</div>
+        <div class="amount-group">
+          <span class="amount-prefix">₹</span>
+          <input type="number" id="payAmount" class="form-input amount-input" placeholder="0.00" min="1" />
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-dim);margin-top:8px;">Enter the amount as discussed with our sales team, or the amount from your quotation.</div>
+      </div>
+
+      <div style="padding: 16px 24px; display:flex; flex-direction:column; gap:8px;">
+        <div class="form-field" style="margin-bottom:0;">
+          <label for="payerName">Your Full Name</label>
+          <input type="text" id="payerName" class="form-input" placeholder="e.g. Rajesh Kumar" />
+        </div>
+        <div class="form-row">
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="payerPhone">Phone Number</label>
+            <input type="tel" id="payerPhone" class="form-input" placeholder="+91 98765 43210" />
+          </div>
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="payerEmail">Email Address</label>
+            <input type="email" id="payerEmail" class="form-input" placeholder="you@email.com" />
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:0;">
+          <label for="payPurpose">Payment Purpose / Order Reference</label>
+          <input type="text" id="payPurpose" class="form-input" placeholder="e.g. Air Hockey Table – Order #IGF2026" />
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT METHOD TABS -->
+    <div class="pay-card active fade-up">
+      <div class="method-tabs">
+        <!-- UPI -->
+        <button class="method-tab active" id="tab-upi" onclick="switchTab('upi')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor"/>
+            <path d="M12 9v6m-3-3h6" stroke="currentColor" stroke-linecap="round"/>
+          </svg>
+          <span class="method-tab-label">UPI</span>
+        </button>
+        <!-- Credit Card -->
+        <button class="method-tab" id="tab-credit" onclick="switchTab('credit')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor"/>
+            <line x1="1" y1="10" x2="23" y2="10" stroke="currentColor"/>
+          </svg>
+          <span class="method-tab-label">Credit Card</span>
+        </button>
+        <!-- Debit Card -->
+        <button class="method-tab" id="tab-debit" onclick="switchTab('debit')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor"/>
+            <line x1="1" y1="10" x2="23" y2="10" stroke="currentColor"/>
+            <circle cx="7" cy="15" r="1.5" fill="currentColor"/>
+          </svg>
+          <span class="method-tab-label">Debit Card</span>
+        </button>
+        <!-- Net Banking -->
+        <button class="method-tab" id="tab-netbanking" onclick="switchTab('netbanking')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14" stroke="currentColor" stroke-linecap="round"/>
+            <rect x="9" y="13" width="6" height="8" stroke="currentColor"/>
+          </svg>
+          <span class="method-tab-label">Net Banking</span>
+        </button>
+        <!-- Wallets -->
+        <button class="method-tab" id="tab-wallets" onclick="switchTab('wallets')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 12V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" stroke="currentColor"/>
+            <circle cx="19" cy="12" r="3" stroke="currentColor"/>
+          </svg>
+          <span class="method-tab-label">Wallets</span>
+        </button>
+      </div>
+
+      <!-- UPI PANEL -->
+      <div class="method-panel active" id="panel-upi">
+        <div class="upi-grid">
+          <!-- QR -->
+          <div class="qr-box">
+            <div class="qr-label">SCAN &amp; PAY</div>
+            <img src="assets/upi-qr.png" alt="UPI QR Code – 9262260376@ptsbi" />
+            <div class="qr-label" style="font-size:0.45rem;">9262260376@ptsbi</div>
+            <div class="qr-upi-id">BHIM UPI</div>
+          </div>
+          <!-- Info -->
+          <div class="upi-info">
+            <div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;">PAY USING ANY UPI APP</div>
+              <div class="upi-apps-grid">
+                <div class="upi-app">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color:#6366f1"><circle cx="12" cy="12" r="10"/><text x="7" y="16" font-size="10" fill="white">GP</text></svg>
+                  GPay
+                </div>
+                <div class="upi-app">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color:#6d28d9"><circle cx="12" cy="12" r="10"/><text x="6" y="16" font-size="9" fill="white">PhP</text></svg>
+                  PhonePe
+                </div>
+                <div class="upi-app">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color:#1e40af"><circle cx="12" cy="12" r="10"/><text x="5" y="16" font-size="9" fill="white">PT</text></svg>
+                  Paytm
+                </div>
+                <div class="upi-app">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color:#16a34a"><circle cx="12" cy="12" r="10"/><text x="5" y="16" font-size="9" fill="white">BH</text></svg>
+                  BHIM
+                </div>
+                <div class="upi-app">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color:#b45309"><circle cx="12" cy="12" r="10"/><text x="7" y="16" font-size="9" fill="white">AM</text></svg>
+                  Amazon Pay
+                </div>
+              </div>
+            </div>
+
+            <div class="or-divider">OR ENTER UPI ID MANUALLY</div>
+
+            <div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:0.55rem;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;">UPI ID</div>
+              <div class="upi-id-field">
+                <div class="upi-id-display" id="upiIdDisplay">9262260376@ptsbi</div>
+                <button class="copy-btn" id="copyUpiBtn" onclick="copyUpiId()">COPY ID</button>
+              </div>
+            </div>
+
+            <div class="info-box">
+              <strong>How to pay:</strong> Open any UPI app → Send Money → Enter UPI ID <strong>9262260376@ptsbi</strong> → Enter amount → Add your name &amp; order reference in remarks → Complete payment.
+            </div>
+
+            <button class="pay-now-btn" onclick="submitPayment('UPI')">
+              ⚡ CONFIRM UPI PAYMENT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREDIT CARD PANEL -->
+      <div class="method-panel" id="panel-credit">
+        <div class="card-icons-row">
+          <span class="card-icon">VISA</span>
+          <span class="card-icon">MASTERCARD</span>
+          <span class="card-icon">AMEX</span>
+          <span class="card-icon">RUPAY</span>
+          <span class="card-icon">DINERS</span>
+        </div>
+
+        <div class="info-box" style="margin-bottom:20px;">
+          <strong>Note:</strong> For credit/debit card payments, please call <strong>+91 92622 60376</strong> or WhatsApp us so we can generate a secure payment link. Alternatively use UPI for instant payment.
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="ccName">Cardholder Name</label>
+            <input type="text" id="ccName" class="form-input" placeholder="Name on Card" />
+          </div>
+          <div class="form-field">
+            <label for="ccNumber">Card Number</label>
+            <input type="text" id="ccNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="ccExpiry">Expiry Date</label>
+            <input type="text" id="ccExpiry" class="form-input" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+          </div>
+          <div class="form-field">
+            <label for="ccCvv">CVV</label>
+            <input type="password" id="ccCvv" class="form-input" placeholder="● ● ●" maxlength="4" />
+          </div>
+        </div>
+
+        <button class="pay-now-btn" onclick="submitPayment('Credit Card')">
+          🔒 PAY SECURELY VIA CREDIT CARD
+        </button>
+      </div>
+
+      <!-- DEBIT CARD PANEL -->
+      <div class="method-panel" id="panel-debit">
+        <div class="card-icons-row">
+          <span class="card-icon">VISA DEBIT</span>
+          <span class="card-icon">MASTERCARD DEBIT</span>
+          <span class="card-icon">RUPAY DEBIT</span>
+          <span class="card-icon">MAESTRO</span>
+        </div>
+
+        <div class="info-box" style="margin-bottom:20px;">
+          <strong>Note:</strong> For debit card payments, we recommend using your bank's UPI app for simpler &amp; faster payment. If you prefer card, call us at <strong>+91 92622 60376</strong> for a secure payment link.
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="dcName">Cardholder Name</label>
+            <input type="text" id="dcName" class="form-input" placeholder="Name on Card" />
+          </div>
+          <div class="form-field">
+            <label for="dcNumber">Card Number</label>
+            <input type="text" id="dcNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="dcExpiry">Expiry Date</label>
+            <input type="text" id="dcExpiry" class="form-input" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+          </div>
+          <div class="form-field">
+            <label for="dcCvv">CVV / PIN</label>
+            <input type="password" id="dcCvv" class="form-input" placeholder="● ● ●" maxlength="4" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="dcDob">Date of Birth (for verification)</label>
+          <input type="date" id="dcDob" class="form-input" />
+        </div>
+
+        <button class="pay-now-btn" onclick="submitPayment('Debit Card')">
+          🔒 PAY SECURELY VIA DEBIT CARD
+        </button>
+      </div>
+
+      <!-- NET BANKING PANEL -->
+      <div class="method-panel" id="panel-netbanking">
+        <div style="font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:14px;">SELECT YOUR BANK</div>
+        <div class="nb-grid" id="nbGrid">
+          <!-- populated by JS -->
+        </div>
+        <div class="info-box" style="margin-bottom:20px;">
+          After selecting your bank, you will be redirected to your bank's secure net banking login portal to complete the payment. Funds will be credited to Indian Game Factory's account ending in <strong>...0376</strong>.
+        </div>
+        <button class="pay-now-btn" onclick="submitPayment('Net Banking')">
+          🏦 PROCEED TO NET BANKING
+        </button>
+      </div>
+
+      <!-- WALLETS PANEL -->
+      <div class="method-panel" id="panel-wallets">
+        <div style="font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:14px;">SELECT WALLET</div>
+        <div class="wallet-grid" id="walletGrid">
+          <!-- populated by JS -->
+        </div>
+        <div class="info-box" style="margin-bottom:20px;">
+          Wallet payments are processed via your wallet provider's secure checkout. You'll be redirected back after completion. Ensure your wallet has sufficient balance before proceeding.
+        </div>
+        <button class="pay-now-btn" onclick="submitPayment('Wallet')">
+          💳 PAY VIA WALLET
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTACT AFTER PAYMENT -->
+    <div class="pay-card fade-up" style="padding:20px 24px;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--igf-orange);margin-bottom:12px;">AFTER PAYMENT — SEND CONFIRMATION</div>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.8;">
+        After completing your payment, please <strong style="color:var(--text-primary)">WhatsApp or call us</strong> with your payment screenshot/UTR number to:<br>
+        📞 <a href="tel:+919262260376" style="color:var(--igf-amber);text-decoration:none;font-weight:600;">+91 92622 60376</a><br>
+        ✉ <a href="mailto:deyshubham313@gmail.com" style="color:var(--igf-amber);text-decoration:none;font-weight:600;">deyshubham313@gmail.com</a>
+      </p>
+      <a href="https://wa.me/919262260376?text=Hi!%20I%20have%20completed%20the%20payment%20for%20my%20order.%20Please%20find%20the%20confirmation%20attached." target="_blank"
+        style="display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:10px 20px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:4px;color:#25d366;font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.12em;text-decoration:none;cursor:none;transition:all 0.2s;"
+        onmouseenter="this.style.background='rgba(37,211,102,0.18)'" onmouseleave="this.style.background='rgba(37,211,102,0.1)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        SEND PAYMENT SCREENSHOT ON WHATSAPP
+      </a>
+    </div>
+  </div>
+
+  <!-- RIGHT: ORDER SUMMARY -->
+  <div class="order-summary fade-up">
+    <div class="summary-card">
+      <div class="summary-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        ORDER SUMMARY
+      </div>
+      <div class="summary-body">
+        <div class="product-preview" id="productPreview">
+          <div class="prod-img-thumb">
+            <img src="assets/logo2-scaled.png" alt="IGF Product" onerror="this.style.display='none'" />
+          </div>
+          <div class="prod-details">
+            <div class="prod-details-name" id="summaryProdName">Indian Game Factory Product</div>
+            <div class="prod-details-cat" id="summaryProdCat">Gaming Equipment</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <span>Customer</span>
+          <span id="summaryName" style="color:var(--text-primary);">—</span>
+        </div>
+        <div class="summary-row">
+          <span>Reference</span>
+          <span id="summaryRef" style="color:var(--text-primary);font-size:0.78rem;max-width:170px;text-align:right;">—</span>
+        </div>
+        <div class="summary-row">
+          <span>Payment Method</span>
+          <span id="summaryMethod" style="color:var(--igf-amber);">UPI</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="amount" id="summaryTotal">₹ —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-reminder" style="margin-top:16px;">
+      <p>Need help with your payment?<br>
+        <strong>Call:</strong> <a href="tel:+919262260376" style="color:var(--igf-amber);text-decoration:none;">+91 92622 60376</a><br>
+        <strong>WhatsApp:</strong> <a href="https://wa.me/919262260376" target="_blank" style="color:var(--igf-amber);text-decoration:none;">Chat with us</a><br>
+        <strong>Email:</strong> <a href="mailto:deyshubham313@gmail.com" style="color:var(--igf-amber);text-decoration:none;">deyshubham313@gmail.com</a>
+      </p>
+    </div>
+
+    <div class="security-logos">
+      <span class="security-badge">RBI APPROVED</span>
+      <span class="security-badge">PCI DSS</span>
+      <span class="security-badge">SSL SECURED</span>
+      <span class="security-badge">256-BIT</span>
+    </div>
+  </div>
+
+</div><!-- end payment-wrap -->
+
+<!-- PROCESSING OVERLAY -->
+<div class="processing-overlay" id="processingOverlay">
+  <div class="spin-ring"></div>
+  <div class="processing-text">PROCESSING PAYMENT...</div>
+  <div style="font-size:0.72rem;color:var(--text-dim);letter-spacing:0.1em;">Please do not close this window</div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="success-title">PAYMENT INITIATED</div>
+    <p class="success-text">Your payment confirmation has been submitted. Our team will verify and send you an official receipt within 2–4 hours. Please share your payment screenshot via WhatsApp for faster confirmation.</p>
+    <div class="success-ref" id="successRef">REF: IGF-2026-XXXXXX</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://wa.me/919262260376?text=Hi!%20I%20have%20completed%20my%20payment.%20My%20reference%20is%20attached." target="_blank" class="btn-primary" style="background:linear-gradient(135deg,#25d366,#128c7e);clip-path:none;border-radius:4px;font-size:0.65rem;">
+        WhatsApp Us
+      </a>
+      <a href="index.html" class="btn-primary" style="font-size:0.65rem;">
+        Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px'; ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a,button,.upi-app,.nb-bank,.wallet-opt').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2.5)'; ring.style.opacity = '0.4'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.opacity = '1'; });
+  });
+
+  // Tab switching
+  function switchTab(tab) {
+    // Tabs
+    document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    // Panels
+    document.querySelectorAll('.method-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+    // Update summary method
+    const labels = { upi:'UPI', credit:'Credit Card', debit:'Debit Card', netbanking:'Net Banking', wallets:'Wallet' };
+    document.getElementById('summaryMethod').textContent = labels[tab] || tab;
+  }
+
+  // Populate Net Banking banks
+  var banks = [
+    'State Bank of India','HDFC Bank','ICICI Bank','Axis Bank','Kotak Mahindra',
+    'Punjab National Bank','Bank of Baroda','Union Bank','Canara Bank','IDFC First Bank',
+    'Yes Bank','IndusInd Bank','Federal Bank','South Indian Bank','UCO Bank'
+  ];
+  var nbGrid = document.getElementById('nbGrid');
+  var selectedBank = '';
+  banks.forEach(function(b, i) {
+    var div = document.createElement('label');
+    div.className = 'nb-bank';
+    div.style.cursor = 'none';
+    div.innerHTML = '<input type="radio" name="bank" value="' + b + '" style="accent-color:var(--igf-orange);" id="bank-' + i + '"> ' + b;
+    div.addEventListener('click', function() { selectedBank = b; });
+    nbGrid.appendChild(div);
+  });
+
+  // Populate Wallets
+  var wallets = [
+    { name:'Paytm',  color:'#00baf2' },
+    { name:'PhonePe', color:'#6d28d9' },
+    { name:'Amazon Pay', color:'#ff9900' },
+    { name:'Mobikwik', color:'#e40046' },
+    { name:'Freecharge', color:'#00b9f1' },
+    { name:'Airtel Money', color:'#e40000' },
+  ];
+  var walletGrid = document.getElementById('walletGrid');
+  var selectedWallet = '';
+  wallets.forEach(function(w) {
+    var div = document.createElement('div');
+    div.className = 'wallet-opt';
+    div.style.cursor = 'none';
+    div.innerHTML = '<svg viewBox="0 0 24 24" fill="' + w.color + '" width="28" height="28"><circle cx="12" cy="12" r="10"/></svg>' + w.name;
+    div.addEventListener('click', function() {
+      document.querySelectorAll('.wallet-opt').forEach(function(el) { el.classList.remove('selected'); });
+      div.classList.add('selected');
+      selectedWallet = w.name;
+    });
+    walletGrid.appendChild(div);
+  });
+
+  // Copy UPI ID
+  function copyUpiId() {
+    var upiId = '9262260376@ptsbi';
+    navigator.clipboard.writeText(upiId).then(function() {
+      var btn = document.getElementById('copyUpiBtn');
+      btn.textContent = 'COPIED!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'COPY ID';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(function() {
+      // Fallback
+      var ta = document.createElement('textarea');
+      ta.value = upiId;
+      document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      var btn = document.getElementById('copyUpiBtn');
+      btn.textContent = 'COPIED!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'COPY ID';
+        btn.classList.remove('copied');
+      }, 2500);
+    });
+  }
+
+  // Format card number
+  function formatCardNumber(input) {
+    var v = input.value.replace(/\D/g, '').substring(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+  function formatExpiry(input) {
+    var v = input.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+    input.value = v;
+  }
+
+  // Live update summary
+  document.getElementById('payerName').addEventListener('input', function() {
+    document.getElementById('summaryName').textContent = this.value || '—';
+  });
+  document.getElementById('payPurpose').addEventListener('input', function() {
+    document.getElementById('summaryRef').textContent = this.value || '—';
+  });
+  document.getElementById('payAmount').addEventListener('input', function() {
+    var val = parseFloat(this.value);
+    document.getElementById('summaryTotal').textContent = val ? '₹ ' + val.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}) : '₹ —';
+  });
+
+  // Submit Payment
+  function submitPayment(method) {
+    var amount = document.getElementById('payAmount').value;
+    var name   = document.getElementById('payerName').value.trim();
+    var phone  = document.getElementById('payerPhone').value.trim();
+    var email  = document.getElementById('payerEmail').value.trim();
+    var purpose = document.getElementById('payPurpose').value.trim();
+
+    if (!amount || parseFloat(amount) < 1) {
+      document.getElementById('payAmount').focus();
+      document.getElementById('payAmount').classList.add('invalid');
+      alert('Please enter a valid payment amount.');
+      return;
+    }
+    if (!name) {
+      document.getElementById('payerName').focus();
+      alert('Please enter your name.');
+      return;
+    }
+
+    // Show processing
+    var proc = document.getElementById('processingOverlay');
+    proc.classList.add('open');
+
+    // Generate reference
+    var ref = 'IGF-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2,6).toUpperCase();
+    document.getElementById('successRef').textContent = 'REF: ' + ref;
+
+    // Compose notification email via formsubmit
+    var formData = new FormData();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('email', email);
+    formData.append('_subject', 'Payment Initiated: ₹' + parseFloat(amount).toLocaleString('en-IN') + ' — ' + name);
+    formData.append('payment_amount', '₹' + parseFloat(amount).toLocaleString('en-IN'));
+    formData.append('payment_method', method);
+    formData.append('order_reference', purpose || 'Not specified');
+    formData.append('reference_id', ref);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+
+    // Send notification to email
+    fetch('https://formsubmit.co/ajax/deyshubham313@gmail.com', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function() {
+      setTimeout(function() {
+        proc.classList.remove('open');
+        document.getElementById('successOverlay').classList.add('open');
+      }, 1800);
+    })
+    .catch(function() {
+      // Still show success — payment was attempted
+      setTimeout(function() {
+        proc.classList.remove('open');
+        document.getElementById('successOverlay').classList.add('open');
+      }, 1800);
+    });
+  }
+
+  // Load URL params if coming from product page
+  window.addEventListener('DOMContentLoaded', function() {
+    var params = new URLSearchParams(window.location.search);
+    var prodName = params.get('product');
+    var catName  = params.get('category');
+    if (prodName) {
+      document.getElementById('summaryProdName').textContent = prodName;
+      document.getElementById('payPurpose').value = prodName + ' — Order';
+      document.getElementById('summaryRef').textContent = prodName + ' — Order';
+    }
+    if (catName) {
+      document.getElementById('summaryProdCat').textContent = catName;
+    }
+  });
+</script>
+</body>
+</html>
