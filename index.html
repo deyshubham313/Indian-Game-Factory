@@ -457,14 +457,31 @@
 
     /* PRODUCTS / GAME CATEGORIES */
     .products-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      overflow-x: auto;
       gap: 24px;
-      padding: 0 5% 80px;
+      padding: 15px 5% 80px;
       background: transparent;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .products-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+    .products-grid::-webkit-scrollbar-track {
+      background: rgba(255,87,34,0.05);
+      border-radius: 4px;
+    }
+    .products-grid::-webkit-scrollbar-thumb {
+      background: rgba(255,87,34,0.3);
+      border-radius: 4px;
+    }
+    .products-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--igf-orange);
     }
     /* ──── PREMIUM CATALOG CARDS ──── */
     .product-card {
+      flex: 0 0 290px;
       background: var(--bg-card);
       padding: 0;
       display: flex;
@@ -887,7 +904,7 @@
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 4% 60px; }
+      .products-grid { gap: 16px; padding: 10px 4% 60px; }
       .footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
     }
     @media (max-width: 768px) {
@@ -898,7 +915,6 @@
       .nav-links { display: none; }
       .hero-stats { gap: 1.5rem; }
       .footer-main { grid-template-columns: 1fr; gap: 32px; }
-      .products-grid { grid-template-columns: 1fr 1fr; }
     }
   
     /* ============================================
@@ -1551,21 +1567,21 @@
   <canvas id="hero-canvas"></canvas>
 
   <div class="hero-content">
-    <div class="hero-badge">
+    <div class="hero-badge" id="heroBadgeEl">
       India's #1 Gaming Equipment Manufacturer
     </div>
-    <h1 class="hero-title">
-      <span class="line1">POWER UP YOUR</span>
-      <span class="line3">GAMING EMPIRE</span>
+    <h1 class="hero-title" id="heroTitleEl">
+      <span class="line1" id="heroLine1El">POWER UP YOUR</span>
+      <span class="line3" id="heroLine2El">GAMING EMPIRE</span>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" id="heroSubEl">
       From hyper-immersive VR arenas to classic redemption machines — we supply, install and maintain premium amusement equipment for entertainment hubs, malls, and family entertainment centers across India.
     </p>
-    <div class="hero-actions">
-      <a href="#products" class="btn-primary">Explore Products</a>
-      <a href="#contact" class="btn-secondary">Request a Demo</a>
+    <div class="hero-actions" id="heroActionsEl">
+      <a href="#products" class="btn-primary" id="heroBtnPrimaryEl">Explore Products</a>
+      <a href="#contact" class="btn-secondary" id="heroBtnSecondaryEl">Request a Demo</a>
     </div>
-    <div class="hero-stats">
+    <div class="hero-stats" id="heroStatsDisplayEl">
       <div class="stat-item">
         <div class="stat-num">500<span>+</span></div>
         <div class="stat-label">Installations</div>
@@ -1583,8 +1599,8 @@
 </section>
 
 <!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
+<div class="ticker" id="tickerSectionEl">
+  <div class="ticker-inner" id="tickerInnerEl">
     <!-- Duplicate for seamless loop -->
     <span class="ticker-item">AIR HOCKEY <span class="ticker-sep">★</span></span>
     <span class="ticker-item">BUMPER CARS <span class="ticker-sep">★</span></span>
@@ -1610,31 +1626,31 @@
 </div>
 
 <!-- ABOUT -->
-<section id="about" class="section-pad">
+<section id="about" class="section-pad" id="aboutSectionEl">
   <div class="about-grid">
     <div class="about-image-wrap reveal">
       <div class="about-image-frame">
-        <img src="assets/girl-playing-computer-game-in-e-sport-club-2025-03-18-12-43-19-utc-scaled.jpg" alt="Gaming Experience" />
+        <img src="assets/girl-playing-computer-game-in-e-sport-club-2025-03-18-12-43-19-utc-scaled.jpg" alt="Gaming Experience" id="aboutImgEl" />
         <div class="about-corner tl"></div>
         <div class="about-corner tr"></div>
         <div class="about-corner bl"></div>
         <div class="about-corner br"></div>
       </div>
       <div class="about-badge-float">
-        <div class="badge-num">15+</div>
-        <div class="badge-label">Years in<br>Business</div>
+        <div class="badge-num" id="aboutBadgeNumEl">15+</div>
+        <div class="badge-label" id="aboutBadgeLabelEl">Years in<br>Business</div>
       </div>
     </div>
 
     <div class="reveal reveal-delay-2">
       <div class="section-header">
-        <div class="section-tag">Who We Are</div>
-        <h2 class="section-title">India's Most Trusted <span class="hi">Amusement</span> Equipment Partner</h2>
-        <p class="section-desc">
+        <div class="section-tag" id="aboutTagEl">Who We Are</div>
+        <h2 class="section-title" id="aboutTitleEl">India's Most Trusted <span class="hi">Amusement</span> Equipment Partner</h2>
+        <p class="section-desc" id="aboutDescEl">
           We're not just suppliers — we're experience architects. From concept to commissioning, our team ensures every installation delivers maximum engagement and return on investment.
         </p>
       </div>
-      <div class="about-features">
+      <div class="about-features" id="aboutFeaturesEl">
         <div class="about-feat">Widest product range in India — 50+ equipment categories</div>
         <div class="about-feat">End-to-end project support: layout planning to installation</div>
         <div class="about-feat">Dedicated after-sales service & maintenance contracts</div>
@@ -1642,7 +1658,7 @@
         <div class="about-feat">Custom branding & white-label solutions available</div>
       </div>
       <div style="margin-top: 2.5rem;">
-        <a href="#contact" class="btn-primary">Partner With Us</a>
+        <a href="#contact" class="btn-primary" id="aboutCtaEl">Partner With Us</a>
       </div>
     </div>
   </div>
@@ -1658,7 +1674,7 @@
     <p class="section-desc">Every category of amusement equipment, sourced globally and backed by our expertise.</p>
   </div>
 
-  <div class="products-grid">
+  <div class="products-grid" id="productsGridEl">
 
     <div class="product-card" onclick="openCatOverlay('air-hockey')" style="cursor:pointer;">
       <div class="product-card-glow"></div>
@@ -1898,7 +1914,7 @@
     <h2 class="section-title">Featured <span class="hi">Installations</span></h2>
   </div>
   <div class="showcase-wrap reveal">
-    <div class="showcase-row">
+    <div class="showcase-row" id="showcaseRowEl">
       <div class="showcase-card">
         <div class="showcase-tag">VR / IMMERSIVE</div>
         <img class="showcase-img" src="assets/ChatGPT-Image-Oct-17-2025-04_16_48-PM.jpg" alt="VR Arena" />
@@ -1953,11 +1969,11 @@
   <div class="why-grid">
     <div>
       <div class="section-header reveal">
-        <div class="section-tag">Our Edge</div>
-        <h2 class="section-title">Why Businesses <span class="hi">Choose</span> Nexus</h2>
-        <p class="section-desc">We've built a reputation on reliability, innovation and being genuine partners in your success.</p>
+        <div class="section-tag" id="whyTagEl">Our Edge</div>
+        <h2 class="section-title" id="whyTitleEl">Why Businesses <span class="hi">Choose</span> Nexus</h2>
+        <p class="section-desc" id="whyDescEl">We've built a reputation on reliability, innovation and being genuine partners in your success.</p>
       </div>
-      <div class="why-cards">
+      <div class="why-cards" id="whyCardsEl">
         <div class="why-card reveal">
           <div class="why-icon"><img src="assets/Biggest-Showroom-in-India-1.svg" alt="Showroom" /></div>
           <div>
@@ -1992,23 +2008,23 @@
       <img class="why-image" src="assets/WhatsApp-Image-2026-02-14-at-5.34.07-PM-1.jpeg" alt="Our showroom" />
       <div class="why-overlay"></div>
       <div class="why-quote">
-        <div class="why-quote-text">"Nexus didn't just supply machines — they helped us design a gaming zone that doubled our dwell time within 3 months."</div>
-        <div class="why-quote-author">RAHUL MEHTA — FUNZONE MALLS, DELHI</div>
+        <div class="why-quote-text" id="whyQuoteTextEl">"Nexus didn't just supply machines — they helped us design a gaming zone that doubled our dwell time within 3 months."</div>
+        <div class="why-quote-author" id="whyQuoteAuthorEl">RAHUL MEHTA — FUNZONE MALLS, DELHI</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CTA BANNER -->
-<section class="section-pad cta-section">
+<section class="section-pad cta-section" id="ctaSectionEl">
   <div class="cta-bg-lines"></div>
   <div class="cta-inner reveal">
     <div>
-      <div class="cta-title">Ready to Build Your<br><span class="cyan">Ultimate Game Zone?</span></div>
-      <div class="cta-sub">Get a free layout consultation and product recommendations tailored to your space.</div>
+      <div class="cta-title" id="ctaTitleEl">Ready to Build Your<br><span class="cyan" id="ctaTitle2El">Ultimate Game Zone?</span></div>
+      <div class="cta-sub" id="ctaSubEl">Get a free layout consultation and product recommendations tailored to your space.</div>
     </div>
     <div class="cta-actions">
-      <a href="tel:+919262260376" class="cta-phone">+91 92622 60376</a>
+      <a href="tel:+919262260376" class="cta-phone" id="ctaPhoneEl">+91 92622 60376</a>
       <a href="#contact" class="btn-primary">Book Free Consultation</a>
       <a href="payment.html" class="btn-secondary" style="border-color:var(--igf-amber);color:var(--igf-amber);">⚡ Make Payment</a>
     </div>
@@ -2016,12 +2032,12 @@
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="section-pad">
+<section class="section-pad" id="testimonialsSectionEl">
   <div class="section-header reveal" style="text-align:center; max-width:600px; margin:0 auto 60px;">
     <div class="section-tag">Client Stories</div>
     <h2 class="section-title">What Our <span class="hi">Partners</span> Say</h2>
   </div>
-  <div class="testimonials-grid reveal">
+  <div class="testimonials-grid reveal" id="testimonialsGridEl">
     <div class="testi-card">
       <div class="testi-stars">★★★★★</div>
       <div class="testi-text">Outstanding product quality and their team was with us every step — from floor planning to launch day. Our arcade has been running flawlessly for two years.</div>
@@ -2071,33 +2087,33 @@
         <div class="contact-icon">📍</div>
         <div>
           <div class="contact-label">Address</div>
-          <div class="contact-value">Shubham Dey</div>
+          <div class="contact-value" id="contactAddressEl">Shubham Dey</div>
         </div>
       </div>
       <div class="contact-item">
         <div class="contact-label">Address</div>
-        <div class="contact-value">123 Industrial Zone, Sector 44,<br>Gurugram, Haryana 122003</div>
+        <div class="contact-value" id="contactAddress2El">123 Industrial Zone, Sector 44,<br>Gurugram, Haryana 122003</div>
         </div>
       </div>
       <div class="contact-item">
         <div class="contact-icon">📞</div>
         <div>
           <div class="contact-label">Phone</div>
-          <div class="contact-value">+91 92622 60376</div>
+          <div class="contact-value" id="contactPhoneEl">+91 92622 60376</div>
         </div>
       </div>
       <div class="contact-item">
         <div class="contact-icon">✉</div>
         <div>
           <div class="contact-label">Email</div>
-          <div class="contact-value">sales@nexusamusement.in</div>
+          <div class="contact-value" id="contactEmailEl">sales@nexusamusement.in</div>
         </div>
       </div>
       <div class="contact-item">
         <div class="contact-icon">🕐</div>
         <div>
           <div class="contact-label">Working Hours</div>
-          <div class="contact-value">Mon–Sat: 9 AM – 7 PM<br>Sunday: By appointment</div>
+          <div class="contact-value" id="contactHoursEl">Mon–Sat: 9 AM – 7 PM<br>Sunday: By appointment</div>
         </div>
       </div>
     </div>
@@ -2242,8 +2258,8 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <div>\u00a9 2026 <span>Indian Game Factory</span>. All rights reserved.</div>
-    <div>Made with ⚡ for India's gaming entrepreneurs</div>
+    <div id="footerCopyEl">&#169; 2026 <span>Indian Game Factory</span>. All rights reserved.</div>
+    <div id="footerTaglineEl">Made with ⚡ for India's gaming entrepreneurs</div>
   </div>
 </footer>
 
@@ -3934,37 +3950,94 @@ const CARD_TO_CAT = {
 // ============================================
 
 function openCatOverlay(catKey) {
-  const cat = CATEGORIES[catKey];
-  if (!cat) return;
+  // ── Merge admin localStorage data with hardcoded CATEGORIES ──
+  let cat = CATEGORIES[catKey] ? JSON.parse(JSON.stringify(CATEGORIES[catKey])) : null;
+
+  // Pull admin data from localStorage
+  let adminSiteData = {};
+  try { adminSiteData = JSON.parse(localStorage.getItem('igf_site_data') || '{}'); } catch(e) {}
+  const adminMeta = (adminSiteData.catalogMeta || []).find(c => c.id === catKey);
+  const adminProds = (adminSiteData.catalogProducts || {})[catKey] || [];
+  const adminGallery = (adminSiteData.catalogGallery || {})[catKey] || [];
+
+  if (!cat && !adminMeta) {
+    console.warn('Category not found:', catKey);
+    return;
+  }
+
+  // Build or upgrade cat object from admin data
+  if (adminMeta) {
+    if (!cat) {
+      cat = { name: adminMeta.name, icon: adminMeta.icon || '', desc: adminMeta.desc || '', products: [] };
+    } else {
+      // Override with admin values if they were explicitly set
+      if (adminMeta.name) cat.name = adminMeta.name;
+      if (adminMeta.icon) cat.icon = adminMeta.icon;
+      if (adminMeta.desc) cat.desc = adminMeta.desc;
+    }
+  }
+
+  // Merge admin products (admin products override/extend hardcoded ones)
+  if (adminProds.length > 0) {
+    // Build a map of hardcoded products by id
+    const existingById = {};
+    (cat.products || []).forEach(p => { existingById[p.id] = p; });
+    // Merge admin products: update existing or add new
+    adminProds.forEach(ap => {
+      const id = ap.id || (catKey + '-admin-' + Math.random());
+      const base = existingById[id] || {};
+      existingById[id] = Object.assign({}, base, ap, { id });
+    });
+    cat.products = Object.values(existingById);
+  }
+
+  // If no hardcoded products and admin gallery images exist, add gallery as product cards
+  if ((!cat.products || cat.products.length === 0) && adminGallery.length > 0) {
+    cat.products = adminGallery.map((img, i) => ({
+      id: catKey + '-gal-' + i,
+      name: img.caption || (cat.name + ' ' + (i + 1)),
+      image: img.path || img,
+      shortDesc: img.caption || '',
+      fullDesc: img.caption || '',
+      features: [],
+      specs: []
+    }));
+  }
+
+  if (!cat.products) cat.products = [];
 
   document.getElementById('catIconImg').src = cat.icon;
   document.getElementById('catIconImg').alt = cat.name;
   document.getElementById('catTitle').textContent = cat.name;
-  document.getElementById('catDesc').textContent = cat.desc;
+  document.getElementById('catDesc').textContent = cat.desc || '';
   document.getElementById('catProductsLabel').textContent =
     cat.products.length + ' Product' + (cat.products.length !== 1 ? 's' : '') + ' in this Category';
 
   const grid = document.getElementById('catProductsGrid');
   grid.innerHTML = '';
 
-  cat.products.forEach(function(prod) {
-    var card = document.createElement('div');
-    card.className = 'cat-prod-card';
-    card.style.cursor = 'pointer';
-    card.onclick = function() { openProdModal(catKey, prod.id); };
+  if (cat.products.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-family:Orbitron,sans-serif;font-size:0.65rem;letter-spacing:0.15em;">NO PRODUCTS ADDED YET<br><span style="font-size:0.55rem;opacity:0.5;">Add products from the Admin Panel</span></div>';
+  } else {
+    cat.products.forEach(function(prod) {
+      var card = document.createElement('div');
+      card.className = 'cat-prod-card';
+      card.style.cursor = 'pointer';
+      card.onclick = function() { openProdModal(catKey, prod.id, cat); };
 
-    var imgHTML = prod.image
-      ? '<img class="cat-prod-img" src="' + prod.image + '" alt="' + prod.name + '" onerror="this.style.display=\'none\'" />'
-      : '<div class="cat-prod-img-placeholder"><img src="' + cat.icon + '" /></div>';
+      var imgHTML = prod.image
+        ? '<img class="cat-prod-img" src="' + prod.image + '" alt="' + (prod.name||'') + '" onerror="this.style.display=\'none\'" />'
+        : '<div class="cat-prod-img-placeholder"><img src="' + (cat.icon||'') + '" /></div>';
 
-    card.innerHTML = imgHTML
-      + '<div class="cat-prod-body">'
-      + '<div class="cat-prod-name">' + prod.name + '</div>'
-      + (prod.tag ? '<div class="cat-prod-tag">' + prod.tag + '</div>' : '')
-      + '</div>';
+      card.innerHTML = imgHTML
+        + '<div class="cat-prod-body">'
+        + '<div class="cat-prod-name">' + (prod.name||'') + '</div>'
+        + (prod.tag ? '<div class="cat-prod-tag">' + prod.tag + '</div>' : '')
+        + '</div>';
 
-    grid.appendChild(card);
-  });
+      grid.appendChild(card);
+    });
+  }
 
   document.body.style.overflow = 'hidden';
   const overlay = document.getElementById('catOverlay');
@@ -3979,10 +4052,24 @@ function closeCatOverlay() {
   }
 }
 
-function openProdModal(catKey, prodId) {
-  const cat = CATEGORIES[catKey];
-  const prod = cat.products.find(function(p) { return p.id === prodId; });
+function openProdModal(catKey, prodId, catObjOverride) {
+  // Get cat from override (admin merged), fallback to hardcoded
+  const cat = catObjOverride || (function() {
+    if (CATEGORIES[catKey]) return CATEGORIES[catKey];
+    let adminSiteData = {};
+    try { adminSiteData = JSON.parse(localStorage.getItem('igf_site_data') || '{}'); } catch(e) {}
+    const adminMeta = (adminSiteData.catalogMeta || []).find(c => c.id === catKey);
+    if (adminMeta) return { name: adminMeta.name, icon: adminMeta.icon||'', desc: adminMeta.desc||'', products: (adminSiteData.catalogProducts||{})[catKey]||[] };
+    return null;
+  })();
+  if (!cat) return;
+
+  const prod = (cat.products || []).find(function(p) { return p.id === prodId; });
   if (!prod) return;
+
+  const safeSpecs = Array.isArray(prod.specs) ? prod.specs : [];
+  const safeFeatures = Array.isArray(prod.features) ? prod.features : [];
+  const safeFullDesc = prod.fullDesc || prod.shortDesc || prod.description || '';
 
   // ── HEADER BAR ──
   var hCat = document.getElementById('dashHeaderCat');
@@ -3995,20 +4082,20 @@ function openProdModal(catKey, prodId) {
   var imgHTML = '';
   if (prod.image) {
     imgHTML = '<img style="width:100%;height:100%;min-height:600px;object-fit:cover;display:block;cursor:zoom-in;transition:transform 0.4s;" '
-      + 'src="' + prod.image + '" alt="' + prod.name + '" '
-      + 'onclick="openLightbox(\'' + prod.image.replace(/'/g,"\\'") + '\',\'' + prod.name.replace(/'/g,"\\'") + '\')" '
+      + 'src="' + prod.image + '" alt="' + (prod.name||'') + '" '
+      + 'onclick="openLightbox(\'' + (prod.image||'').replace(/'/g,"\\'") + '\',\'' + (prod.name||'').replace(/'/g,"\\'") + '\')" '
       + 'onerror="this.style.display=\'none\'" />'
       + '<div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(13,7,5,0.95),transparent);z-index:2;">'
       + '<div style="font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.15em;color:rgba(255,87,34,0.7);margin-bottom:4px;">TAP IMAGE TO ZOOM</div>'
-      + '<div style="font-family:Orbitron,sans-serif;font-size:0.75rem;font-weight:900;color:#fff0ea;">' + prod.name + '</div>'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.75rem;font-weight:900;color:#fff0ea;">' + (prod.name||'') + '</div>'
       + '</div>'
       + '<div style="position:absolute;top:16px;left:16px;font-family:Orbitron,sans-serif;font-size:0.55rem;letter-spacing:0.15em;padding:5px 12px;background:rgba(255,87,34,0.15);border:1px solid rgba(255,87,34,0.4);color:#ff5722;z-index:2;">'
-      + cat.name.toUpperCase()
+      + (cat.name||'').toUpperCase()
       + '</div>';
   } else {
     imgHTML = '<div style="width:100%;min-height:600px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">'
-      + '<img src="' + cat.icon + '" style="width:100px;height:100px;opacity:0.3;object-fit:contain;" />'
-      + '<div style="font-family:Orbitron,sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:#4a2a1a;">' + prod.name + '</div>'
+      + '<img src="' + (cat.icon||'') + '" style="width:100px;height:100px;opacity:0.3;object-fit:contain;" />'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:#4a2a1a;">' + (prod.name||'') + '</div>'
       + '</div>';
   }
   imgSide.innerHTML = imgHTML;
@@ -4016,7 +4103,7 @@ function openProdModal(catKey, prodId) {
   // ── PRODUCT IDENTITY ──
   document.getElementById('prodModalCat').textContent = cat.name;
   document.getElementById('prodModalName').textContent = prod.name;
-  document.getElementById('prodModalDesc').textContent = prod.fullDesc;
+  document.getElementById('prodModalDesc').textContent = safeFullDesc;
 
   // ── RATING ROW ──
   var ratingNum = (4.1 + Math.random() * 0.8).toFixed(1);
@@ -4033,40 +4120,61 @@ function openProdModal(catKey, prodId) {
   var tagPill = document.getElementById('dashTagPill');
   if (tagPill) tagPill.textContent = prod.tag || 'FEATURED';
 
-  // ── SPECS as animated progress bars ──
-  var specPcts = [88,72,94,68,82,90,65,78];
+  // ── SPECS ──
   var specsEl = document.getElementById('prodModalSpecs');
   if (specsEl) {
-    specsEl.innerHTML = prod.specs.map(function(s, i) {
-      var pct = specPcts[i % specPcts.length];
-      return '<div style="margin-bottom:16px;">'
-        + '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'
-        + '<span style="font-family:Orbitron,sans-serif;font-size:0.58rem;letter-spacing:0.1em;color:#8a6050;text-transform:uppercase;">' + s.label + '</span>'
-        + '<span style="font-size:0.78rem;color:#fff0ea;font-weight:600;">' + s.val + '</span>'
-        + '</div>'
-        + '<div style="height:4px;background:rgba(255,87,34,0.1);border-radius:2px;overflow:hidden;">'
-        + '<div class="dash-spec-bar-fill" data-pct="' + pct + '" style="width:0;height:100%;background:linear-gradient(90deg,#c0392b,#ff5722,#ffab40);border-radius:2px;transition:width 0.9s cubic-bezier(0.23,1,0.32,1);"></div>'
-        + '</div>'
-        + '</div>';
-    }).join('');
+    if (safeSpecs.length > 0) {
+      var specPcts = [88,72,94,68,82,90,65,78];
+      specsEl.innerHTML = safeSpecs.map(function(s, i) {
+        var pct = specPcts[i % specPcts.length];
+        return '<div style="margin-bottom:16px;">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'
+          + '<span style="font-family:Orbitron,sans-serif;font-size:0.58rem;letter-spacing:0.1em;color:#8a6050;text-transform:uppercase;">' + (s.label||'') + '</span>'
+          + '<span style="font-size:0.78rem;color:#fff0ea;font-weight:600;">' + (s.val||'') + '</span>'
+          + '</div>'
+          + '<div style="height:4px;background:rgba(255,87,34,0.1);border-radius:2px;overflow:hidden;">'
+          + '<div class="dash-spec-bar-fill" data-pct="' + pct + '" style="width:0;height:100%;background:linear-gradient(90deg,#c0392b,#ff5722,#ffab40);border-radius:2px;transition:width 0.9s cubic-bezier(0.23,1,0.32,1);"></div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    } else {
+      // No specs: show key info cards instead
+      specsEl.innerHTML = [
+        { l:'CATEGORY', v: cat.name||'' },
+        { l:'STATUS', v:'In Stock' },
+        { l:'DELIVERY', v:'15-30 Working Days' },
+        { l:'WARRANTY', v:'1 Year + AMC' },
+        { l:'INSTALLATION', v:'Turnkey Included' },
+        { l:'MANUFACTURER', v:'Indian Game Factory' }
+      ].map(function(s) {
+        return '<div style="margin-bottom:12px;padding:12px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:4px;">'
+          + '<div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.12em;color:#4a2a1a;margin-bottom:4px;">' + s.l + '</div>'
+          + '<div style="font-size:0.85rem;color:#fff0ea;font-weight:600;">' + s.v + '</div>'
+          + '</div>';
+      }).join('');
+    }
   }
 
   // ── FEATURES ──
   var featEl = document.getElementById('prodModalFeatures');
   if (featEl) {
-    featEl.innerHTML = prod.features.map(function(f) { return '<li>' + f + '</li>'; }).join('');
+    if (safeFeatures.length > 0) {
+      featEl.innerHTML = safeFeatures.map(function(f) { return '<li>' + f + '</li>'; }).join('');
+    } else {
+      featEl.innerHTML = '<li style="color:var(--text-muted);">Commercial grade construction</li><li style="color:var(--text-muted);">PAN India delivery &amp; installation</li><li style="color:var(--text-muted);">1 Year warranty included</li><li style="color:var(--text-muted);">24/7 after-sales support</li>';
+    }
   }
 
   // ── UPDATE WA BUTTON with product name ──
   var waBtn = document.getElementById('dashWaBtn');
   if (waBtn) {
-    waBtn.href = 'https://wa.me/919262260376?text=Hi!%20I%20am%20interested%20in%20' + encodeURIComponent(prod.name) + '%20from%20Indian%20Game%20Factory.';
+    waBtn.href = 'https://wa.me/919262260376?text=Hi!%20I%20am%20interested%20in%20' + encodeURIComponent(prod.name||cat.name) + '%20from%20Indian%20Game%20Factory.';
   }
 
   // ── UPDATE PAY BUTTON with product name and category ──
   var payBtn = document.getElementById('dashPayBtn');
   if (payBtn) {
-    payBtn.href = 'payment.html?product=' + encodeURIComponent(prod.name) + '&category=' + encodeURIComponent(cat.name);
+    payBtn.href = 'payment.html?product=' + encodeURIComponent(prod.name||cat.name) + '&category=' + encodeURIComponent(cat.name);
   }
 
   // ── SHARE BUTTON ──
@@ -4074,7 +4182,7 @@ function openProdModal(catKey, prodId) {
   if (shareBtn) {
     shareBtn.onclick = function() {
       if (navigator.share) {
-        navigator.share({ title: prod.name + ' | Indian Game Factory', text: 'Check out ' + prod.name, url: window.location.href });
+        navigator.share({ title: (prod.name||cat.name) + ' | Indian Game Factory', text: 'Check out ' + (prod.name||cat.name), url: window.location.href });
       } else if (navigator.clipboard) {
         navigator.clipboard.writeText(window.location.href);
         shareBtn.textContent = 'Copied!';
@@ -4260,12 +4368,296 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- ADMIN DATA SYNC — Safe sync, only applies explicitly saved data -->
+<!-- ============================================================ -->
+<script>
+(function() {
+  'use strict';
+  const STORAGE_KEY = 'igf_site_data';
+  let siteData = {};
+  try { siteData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+
+  // Only apply a value if it was EXPLICITLY saved by admin (not a default read)
+  // We track this via a 'savedSections' set in localStorage
+  function g(k) { return siteData[k]; }
+  function setText(id, val) {
+    if(val === undefined || val === null || val === '') return;
+    const el = document.getElementById(id); if(el) el.textContent = val;
+  }
+  function setAttr(id, attr, val) {
+    if(!val) return;
+    const el = document.getElementById(id); if(el) el[attr] = val;
+  }
+
+  function applySiteData(data) {
+    siteData = data;
+    // Sections that have been explicitly saved by admin
+    const saved = data.__saved || {};
+
+    // ── SEO ──
+    if(saved.seo) {
+      if(data.metaTitle) document.title = data.metaTitle;
+      const mDesc = document.querySelector('meta[name="description"]');
+      if(mDesc && data.metaDesc) mDesc.setAttribute('content', data.metaDesc);
+    }
+
+    // ── COLORS ──
+    if(saved.colors && data.colors) {
+      const r = document.documentElement.style;
+      const c = data.colors;
+      if(c.primary) { r.setProperty('--neon-cyan', c.primary); r.setProperty('--igf-orange', c.primary); }
+      if(c.secondary) { r.setProperty('--neon-pink', c.secondary); r.setProperty('--igf-red', c.secondary); }
+      if(c.accent) { r.setProperty('--neon-gold', c.accent); r.setProperty('--igf-amber', c.accent); }
+      if(c.bg) { r.setProperty('--bg-void', c.bg); r.setProperty('--igf-dark', c.bg); }
+    }
+
+    // ── FONTS ──
+    if(saved.fonts && data.fonts) {
+      const h = data.fonts.heading || 'Orbitron';
+      const s = data.fonts.sub || 'Syne';
+      const b = data.fonts.body || 'DM Sans';
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(h)}:wght@400;700;900&family=${encodeURIComponent(s)}:wght@400;700;800&family=${encodeURIComponent(b)}:wght@300;400;500&display=swap`;
+      document.head.appendChild(link);
+    }
+
+    // ── BRAND ──
+    if(saved.brand) {
+      if(data.brandName1) document.querySelectorAll('.nav-logo-line1').forEach(el => el.textContent = data.brandName1);
+      if(data.brandName2) document.querySelectorAll('.nav-logo-line2').forEach(el => el.textContent = data.brandName2);
+    }
+
+    // ── SECTION VISIBILITY ──
+    if(saved.sectionVis && data.sectionVis) {
+      const vis = data.sectionVis;
+      const sectionMap = {
+        hero: '.hero', ticker: '.ticker', about: '#about', products: '#products',
+        showcase: '#showcase', why: '#why', cta: '.cta-section', testimonials: '#testimonialsSectionEl',
+        contact: '#contact', wa: '.whatsapp-float'
+      };
+      Object.entries(sectionMap).forEach(([key, sel]) => {
+        document.querySelectorAll(sel).forEach(el => {
+          el.style.display = vis[key] === false ? 'none' : '';
+        });
+      });
+    }
+
+    // ── HERO ──
+    if(saved.hero) {
+      setText('heroBadgeEl', data.heroBadge);
+      // Title lines — use innerHTML to preserve span styling
+      if(data.heroTitle1) { const el = document.getElementById('heroLine1El'); if(el) el.textContent = data.heroTitle1; }
+      if(data.heroTitle2) { const el = document.getElementById('heroLine2El'); if(el) el.textContent = data.heroTitle2; }
+      setText('heroSubEl', data.heroSub);
+      setText('heroBtnPrimaryEl', data.heroBtnPrimary);
+      setText('heroBtnSecondaryEl', data.heroBtnSecondary);
+    }
+
+    // ── HERO STATS ──
+    if(saved.heroStats && Array.isArray(data.heroStats)) {
+      const statsEl = document.getElementById('heroStatsDisplayEl');
+      if(statsEl) {
+        statsEl.innerHTML = data.heroStats.map(s =>
+          `<div class="stat-item"><div class="stat-num">${esc(s.num)}<span>${esc(s.suffix||'+')}</span></div><div class="stat-label">${esc(s.label)}</div></div>`
+        ).join('');
+      }
+    }
+
+    // ── TICKER ──
+    if(saved.ticker && Array.isArray(data.ticker)) {
+      const inner = document.getElementById('tickerInnerEl');
+      if(inner) {
+        const doubled = [...data.ticker, ...data.ticker];
+        inner.innerHTML = doubled.map(t => `<span class="ticker-item">${esc(t)} <span class="ticker-sep">★</span></span>`).join('');
+      }
+    }
+
+    // ── ABOUT ──
+    if(saved.about) {
+      setText('aboutTagEl', data.aboutTag);
+      if(data.aboutTitle) { const el = document.getElementById('aboutTitleEl'); if(el) el.textContent = data.aboutTitle; }
+      setText('aboutDescEl', data.aboutDesc);
+      setText('aboutCtaEl', data.aboutCta);
+      setText('aboutBadgeNumEl', data.aboutBadgeNum);
+      setText('aboutBadgeLabelEl', data.aboutBadgeLabel);
+      setAttr('aboutImgEl', 'src', data.aboutImgPath);
+    }
+
+    // ── ABOUT FEATURES ──
+    if(saved.aboutFeatures && Array.isArray(data.aboutFeatures)) {
+      const el = document.getElementById('aboutFeaturesEl');
+      if(el) el.innerHTML = data.aboutFeatures.map(f => `<div class="about-feat">${esc(f)}</div>`).join('');
+    }
+
+    // ── CATALOG GRID — always apply if admin has catalog data ──
+    if(Array.isArray(data.catalogMeta) && data.catalogMeta.length > 0) {
+      const grid = document.getElementById('productsGridEl');
+      if(grid) {
+        const catProds = data.catalogProducts || {};
+        const catGallery = data.catalogGallery || {};
+        grid.innerHTML = data.catalogMeta.map((cat, i) => {
+          const prods = catProds[cat.id] || [];
+          const gal = catGallery[cat.id] || [];
+          
+          const defaultThumbs = {
+            'air-hockey': 'assets/air-hockey-aurora.png',
+            'bumper-cars': 'assets/products/bc-drift-bumper.png',
+            'virtual-reality': 'assets/products/vr-simulator.png',
+            'trampoline-park': 'assets/products/tp-trampoline-1.jpg',
+            'basketball-machines': 'assets/basketball-showtime.png',
+            'bowling-alley': 'assets/Bowling.jpeg.jpg',
+            'kiddy-rides': 'assets/products/kr-cool-driver.png',
+            'shooting-games': 'assets/products/sg-crazy-gun.png',
+            'gift-redemption': 'assets/products/kr-ufo.png',
+            'strength-based-games': 'assets/products/sb-hercules.png',
+            'inflatables': 'assets/Softplay.jpeg.jpg',
+            'battery-operated-rides': 'assets/battery-tron-bike.png'
+          };
+          
+          let thumbImg = cat.thumb;
+          if (!thumbImg && defaultThumbs[cat.id]) {
+            thumbImg = defaultThumbs[cat.id];
+          } else if (!thumbImg) {
+            thumbImg = (prods[0] && prods[0].image) || (gal[0] && (gal[0].path||gal[0])) || '';
+          }
+
+          const delayClass = i > 0 ? ` reveal-delay-${Math.min(i,3)}` : '';
+          return `
+          <div class="product-card${delayClass}" onclick="openCatOverlay('${esc(cat.id)}')" style="cursor:pointer;" data-cat="${esc(cat.id)}">
+            <div class="product-card-glow"></div>
+            <div class="product-card-thumb">
+              ${thumbImg ? `<img src="${esc(thumbImg)}" alt="${esc(cat.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />` : ''}
+              <img src="${esc(cat.icon||'')}" class="thumb-icon" ${thumbImg?'style="display:none"':''} alt="" />
+              <div class="product-card-thumb-overlay"></div>
+              <div class="product-card-view-pill">VIEW PRODUCTS</div>
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-count"><span class="product-card-count-dot"></span>CATEGORY</div>
+              <div class="product-name">${esc(cat.name)}</div>
+              <div class="product-desc">${esc(cat.desc||'')}</div>
+              <div class="product-card-footer">
+                <span class="product-card-explore">EXPLORE →</span>
+                <div class="product-arrow">›</div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        // Re-attach click handlers
+        grid.querySelectorAll('.product-card[data-cat]').forEach(card => {
+          card.addEventListener('click', () => {
+            const catKey = card.getAttribute('data-cat');
+            if(catKey && typeof openCatOverlay === 'function') openCatOverlay(catKey);
+          });
+        });
+      }
+    }
+
+    // ── GALLERY / SHOWCASE ──
+    if(saved.gallery && Array.isArray(data.gallery)) {
+      const row = document.getElementById('showcaseRowEl');
+      if(row) {
+        row.innerHTML = data.gallery.map(item => `
+          <div class="showcase-card">
+            <div class="showcase-tag">${esc(item.tag||'')}</div>
+            <img class="showcase-img" src="${esc(item.img||'')}" alt="${esc(item.name||'')}" />
+            <div class="showcase-body">
+              <div class="showcase-cat">${esc(item.cat||'')}</div>
+              <div class="showcase-name">${esc(item.name||'')}</div>
+              <div class="showcase-text">${esc(item.text||'')}</div>
+            </div>
+          </div>`).join('');
+      }
+    }
+
+    // ── TESTIMONIALS ──
+    if(saved.testimonials && Array.isArray(data.testimonials)) {
+      const grid = document.getElementById('testimonialsGridEl');
+      if(grid) {
+        grid.innerHTML = data.testimonials.map(t => `
+          <div class="testi-card">
+            <div class="testi-stars">${'★'.repeat(t.stars||5)}</div>
+            <div class="testi-text">${esc(t.text||'')}</div>
+            <div class="testi-author">
+              <div class="testi-avatar">${esc(t.initials||'')}</div>
+              <div>
+                <div class="testi-name">${esc(t.name||'')}</div>
+                <div class="testi-role">${esc(t.role||'')}</div>
+              </div>
+            </div>
+          </div>`).join('');
+      }
+    }
+
+    // ── WHY CHOOSE US ──
+    if(saved.whyHeader) {
+      setText('whyTagEl', data.whyTag);
+      setText('whyTitleEl', data.whyTitle);
+      setText('whyDescEl', data.whyDesc);
+    }
+    if(saved.whyQuote) {
+      setText('whyQuoteTextEl', data.whyQuoteText);
+      setText('whyQuoteAuthorEl', data.whyQuoteAuthor);
+    }
+    if(saved.whyCards && Array.isArray(data.whyCards)) {
+      const el = document.getElementById('whyCardsEl');
+      if(el) {
+        el.innerHTML = data.whyCards.map((c, i) => `
+          <div class="why-card reveal${i>0?' reveal-delay-'+Math.min(i,3):''}">
+            <div class="why-icon" style="font-size:1.8rem;width:56px;height:56px;display:flex;align-items:center;justify-content:center;">${esc(c.icon||'')}</div>
+            <div>
+              <div class="why-title">${esc(c.title||'')}</div>
+              <div class="why-text">${esc(c.text||'')}</div>
+            </div>
+          </div>`).join('');
+      }
+    }
+
+    // ── CONTACT ──
+    if(saved.contact) {
+      if(data.contactPhone) {
+        setText('contactPhoneEl', data.contactPhone);
+        setText('ctaPhoneEl', data.contactPhone);
+        const el = document.getElementById('ctaPhoneEl');
+        if(el) el.href = 'tel:' + data.contactPhone.replace(/[^+0-9]/g,'');
+      }
+      setText('contactEmailEl', data.contactEmail);
+      if(data.contactAddress) setText('contactAddress2El', data.contactAddress);
+      setText('contactHoursEl', data.contactHours);
+    }
+
+    // ── CTA ──
+    if(saved.cta) {
+      setText('ctaTitle2El', data.ctaTitle2);
+      setText('ctaSubEl', data.ctaSub);
+    }
+
+    // ── FOOTER ──
+    if(saved.footer) {
+      setText('footerCopyEl', data.footerCopyright);
+      setText('footerTaglineEl', data.footerTagline);
+    }
+  }
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Apply on page load
+  applySiteData(siteData);
+
+  // Live sync via BroadcastChannel
+  if(window.BroadcastChannel) {
+    const bc = new BroadcastChannel('igf_admin');
+    bc.onmessage = function() {
+      try {
+        siteData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        applySiteData(siteData);
+      } catch(e) {}
+    };
+  }
+})();
+</script>
 </body>
 </html>
-
-
-
-
-
-
-

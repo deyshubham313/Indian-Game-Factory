@@ -973,6 +973,12 @@
       </div>
 
       <div class="nav-section-label">Website</div>
+      <div class="nav-item" onclick="showPanel('payment')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor"/><line x1="1" y1="10" x2="23" y2="10" stroke="currentColor"/></svg>
+        Payment Settings
+        <span class="nav-badge new">NEW</span>
+      </div>
+
       <div class="nav-item" onclick="showPanel('sections')">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
         Page Sections
@@ -1113,7 +1119,7 @@
 
     <!-- ══ CATALOGS ══ -->
     <div class="panel" id="panel-catalogs">
-      <div class="panel-header"><div class="panel-tag">Products</div><div class="panel-title">Manage <span class="accent">Catalogs</span></div><div class="panel-desc">Add, edit or remove product categories shown on the website.</div></div>
+      <div class="panel-header"><div class="panel-tag">Products</div><div class="panel-title">Manage <span class="accent">Catalogs</span></div><div class="panel-desc">Add, edit or remove product categories. Each catalog has its own image gallery.</div></div>
       <div class="g-card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
           <div class="card-title" style="margin:0;border:none;padding:0;">Product Categories</div>
@@ -1123,13 +1129,54 @@
       </div>
     </div>
 
+    <!-- ══ PAYMENT SETTINGS ══ -->
+    <div class="panel" id="panel-payment">
+      <div class="panel-header"><div class="panel-tag">Payment</div><div class="panel-title">Payment <span class="accent">Settings</span></div><div class="panel-desc">Configure Razorpay integration, preset amounts shown on the payment page, and contact info.</div></div>
+      <div class="g-card">
+        <div class="card-title">Razorpay Integration</div>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Razorpay Key ID</label><input class="field-input" id="rzpKey" placeholder="rzp_live_XXXXXXXXXXXX or rzp_test_XXXX" /></div>
+          <div class="field-group"><label class="field-label">Business Name</label><input class="field-input" id="rzpBizName" placeholder="Indian Game Factory" /></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;line-height:1.7;">
+          ℹ️ Get your Key ID from <strong style="color:var(--igf-orange);">Razorpay Dashboard → Settings → API Keys</strong>. Use <code style="background:rgba(255,87,34,0.1);padding:2px 6px;border-radius:3px;font-size:0.8em;">rzp_test_</code> for testing, <code style="background:rgba(255,87,34,0.1);padding:2px 6px;border-radius:3px;font-size:0.8em;">rzp_live_</code> for production.
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="savePaymentSettings()">Save Razorpay Config</button></div>
+      </div>
+
+      <div class="g-card">
+        <div class="card-title">Preset Payment Amounts</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px;">These amounts appear as quick-select pills on the payment page. Add, remove or change them here.</div>
+        <div id="presetAmountsList"></div>
+        <button class="add-row-btn" onclick="addPresetAmount()">+ Add Amount</button>
+        <div class="btn-row"><button class="btn btn-primary" onclick="savePresetAmounts()">Save Amounts</button></div>
+      </div>
+
+      <div class="g-card">
+        <div class="card-title">UPI / Contact Info</div>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">UPI ID</label><input class="field-input" id="payUpiId" placeholder="9262260376@ptsbi" /></div>
+          <div class="field-group"><label class="field-label">Contact Phone (Payment Page)</label><input class="field-input" id="payPhone" placeholder="+91 92622 60376" /></div>
+        </div>
+        <div class="field-group"><label class="field-label">QR Code Image Path</label><input class="field-input" id="payQrPath" placeholder="assets/upi-qr.png" /></div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="savePaymentContact()">Save</button></div>
+      </div>
+
+      <div class="g-card">
+        <div class="card-title">Preview Payment Page</div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">See how your payment page looks with the current settings.</p>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="window.open('payment.html','_blank')">↗ Open Payment Page</button></div>
+      </div>
+    </div>
+
     <!-- ══ ALL PRODUCTS ══ -->
     <div class="panel" id="panel-products">
-      <div class="panel-header"><div class="panel-tag">Products</div><div class="panel-title">All <span class="accent">Products</span></div><div class="panel-desc">Browse and edit products across all categories.</div></div>
+      <div class="panel-header"><div class="panel-tag">Products</div><div class="panel-title">All <span class="accent">Products</span></div><div class="panel-desc">Browse, add and edit products across all categories.</div></div>
       <div class="g-card">
-        <div style="display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap;">
+        <div style="display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap;align-items:center;">
           <select class="field-select" id="productCatFilter" onchange="filterProducts()" style="max-width:240px;"><option value="">All Categories</option></select>
           <input class="field-input" id="productSearch" placeholder="🔍 Search products..." oninput="filterProducts()" style="max-width:260px;" />
+          <button class="btn btn-primary" onclick="openAddProductModal()" style="margin-left:auto;">+ Add Product</button>
         </div>
         <div class="prod-grid" id="allProductsList"></div>
       </div>
@@ -1411,22 +1458,27 @@ const DEFAULT_WHY_CARDS = [
   {icon:'🎯',title:'Deep Industry Expertise',text:'15+ years of placement experience means we know what works in which location.'}
 ];
 const DEFAULT_CATS = [
-  {id:'air-hockey',name:'Air Hockey',icon:'assets/Air-Hockey.svg',productCount:10},
-  {id:'bumper-cars',name:'Bumper Cars',icon:'assets/Bumpers-Cars.svg',productCount:5},
-  {id:'virtual-reality',name:'Virtual Reality',icon:'assets/Virtual-Reality-Games.svg',productCount:19},
-  {id:'trampoline-park',name:'Trampoline Park',icon:'assets/Trampoline-Park.svg',productCount:5},
-  {id:'basketball-machines',name:'Basketball Machines',icon:'assets/basketball-machine.svg',productCount:8},
-  {id:'bowling-alley',name:'Bowling Alley',icon:'assets/Bowling-Alley.svg',productCount:3},
-  {id:'kiddy-rides',name:'Kiddy Rides',icon:'assets/Kiddy-Rides-Games.svg',productCount:12},
-  {id:'shooting-games',name:'Shooting Games',icon:'assets/Shooting-Games.svg',productCount:8},
-  {id:'gift-redemption',name:'Gift Redemption',icon:'assets/Gift-Redemption.svg',productCount:6},
-  {id:'strength-based-games',name:'Strength-Based Games',icon:'assets/Strength-based-Games.svg',productCount:6},
-  {id:'inflatables',name:'Inflatables',icon:'assets/Inflatables.svg',productCount:4},
-  {id:'battery-operated-rides',name:'Battery Operated Rides',icon:'assets/Battery-Operated-Rides.svg',productCount:21}
+  {id:'air-hockey',name:'Air Hockey',icon:'assets/Air-Hockey.svg',productCount:10,thumb:'assets/air-hockey-aurora.png'},
+  {id:'bumper-cars',name:'Bumper Cars',icon:'assets/Bumpers-Cars.svg',productCount:5,thumb:'assets/products/bc-drift-bumper.png'},
+  {id:'virtual-reality',name:'Virtual Reality',icon:'assets/Virtual-Reality-Games.svg',productCount:19,thumb:'assets/products/vr-simulator.png'},
+  {id:'trampoline-park',name:'Trampoline Park',icon:'assets/Trampoline-Park.svg',productCount:5,thumb:'assets/products/tp-trampoline-1.jpg'},
+  {id:'basketball-machines',name:'Basketball Machines',icon:'assets/basketball-machine.svg',productCount:8,thumb:'assets/basketball-showtime.png'},
+  {id:'bowling-alley',name:'Bowling Alley',icon:'assets/Bowling-Alley.svg',productCount:3,thumb:'assets/Bowling.jpeg.jpg'},
+  {id:'kiddy-rides',name:'Kiddy Rides',icon:'assets/Kiddy-Rides-Games.svg',productCount:12,thumb:'assets/products/kr-cool-driver.png'},
+  {id:'shooting-games',name:'Shooting Games',icon:'assets/Shooting-Games.svg',productCount:8,thumb:'assets/products/sg-crazy-gun.png'},
+  {id:'gift-redemption',name:'Gift Redemption',icon:'assets/Gift-Redemption.svg',productCount:6,thumb:'assets/products/kr-ufo.png'},
+  {id:'strength-based-games',name:'Strength-Based Games',icon:'assets/Strength-based-Games.svg',productCount:6,thumb:'assets/products/sb-hercules.png'},
+  {id:'inflatables',name:'Inflatables',icon:'assets/Inflatables.svg',productCount:4,thumb:'assets/Softplay.jpeg.jpg'},
+  {id:'battery-operated-rides',name:'Battery Operated Rides',icon:'assets/Battery-Operated-Rides.svg',productCount:21,thumb:'assets/battery-tron-bike.png'}
 ];
 
 function getD(k,def) { return siteData[k] !== undefined ? siteData[k] : def; }
 function setD(k,v) { siteData[k]=v; localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData)); addRecentChange(k); }
+function markSaved(section) {
+  if(!siteData.__saved) siteData.__saved = {};
+  siteData.__saved[section] = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+}
 
 // ══════════════════════════════════════════════════════════════════
 // LOGIN
@@ -1469,7 +1521,7 @@ function initAdmin() {
   loadHeroEditor(); loadAboutEditor(); loadTickerEditor();
   loadCatalogList(); loadAllProducts(); loadGalleryList();
   loadTestimonialList(); loadWhyCards(); loadContactInfo();
-  loadBrandInfo(); loadFontColors();
+  loadBrandInfo(); loadFontColors(); loadPaymentSettings();
   syncInputs();
 }
 
@@ -1489,12 +1541,13 @@ function showPanel(id) {
   document.querySelectorAll('.nav-item').forEach(ni => {
     if(ni.getAttribute('onclick') && ni.getAttribute('onclick').includes("'"+id+"'")) ni.classList.add('active');
   });
-  const titles = {dashboard:'DASHBOARD',brand:'LOGO & BRAND',fonts:'FONTS & COLORS',hero:'HERO SECTION',catalogs:'MANAGE CATALOGS',products:'ALL PRODUCTS',about:'ABOUT SECTION',gallery:'GALLERY',testimonials:'TESTIMONIALS',ticker:'TICKER BAR',contact:'CONTACT INFO',whychoose:'WHY CHOOSE US',sections:'PAGE SECTIONS',settings:'SITE SETTINGS'};
+  const titles = {dashboard:'DASHBOARD',brand:'LOGO & BRAND',fonts:'FONTS & COLORS',hero:'HERO SECTION',catalogs:'MANAGE CATALOGS',products:'ALL PRODUCTS',about:'ABOUT SECTION',gallery:'GALLERY',testimonials:'TESTIMONIALS',ticker:'TICKER BAR',contact:'CONTACT INFO',whychoose:'WHY CHOOSE US',sections:'PAGE SECTIONS',settings:'SITE SETTINGS',payment:'PAYMENT SETTINGS'};
   document.getElementById('topbarTitle').textContent = titles[id]||id.toUpperCase();
   if(id==='products') loadAllProducts();
   if(id==='catalogs') loadCatalogList();
   if(id==='gallery') loadGalleryList();
   if(id==='testimonials') loadTestimonialList();
+  if(id==='payment') loadPaymentSettings();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1553,12 +1606,12 @@ function addHeroStat() { const s=getD('heroStats',DEFAULT_HERO_STATS); s.push({n
 function removeHeroStat(i) { const s=getD('heroStats',DEFAULT_HERO_STATS); s.splice(i,1); setD('heroStats',s); renderHeroStats(s); }
 function saveHeroContent() {
   ['heroBadge','heroTitle1','heroTitle2','heroSub','heroBtnPrimary','heroBtnSecondary'].forEach(k => setD(k, document.getElementById(k).value));
-  broadcast('hero', siteData); toast('Hero section saved!');
+  markSaved('hero'); broadcast('hero', siteData); toast('Hero section saved!');
 }
 function saveHeroStats() {
   const stats=[]; let i=0;
   while(document.getElementById(`hs_num_${i}`)) { stats.push({num:document.getElementById(`hs_num_${i}`).value, suffix:'+', label:document.getElementById(`hs_lbl_${i}`).value}); i++; }
-  setD('heroStats',stats); broadcast('heroStats',stats); toast('Stats saved!');
+  setD('heroStats',stats); markSaved('heroStats'); broadcast('heroStats',stats); toast('Stats saved!');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1568,8 +1621,8 @@ function loadBrandInfo() {
   const d={brandName1:'INDIAN',brandName2:'GAME FACTORY',brandTagline:"India's #1 Gaming Equipment Manufacturer",footerAbout:"India's most comprehensive gaming & amusement equipment manufacturer.",footerCopyright:'© 2026 Indian Game Factory',footerTagline:"Made with ⚡ for India's gaming entrepreneurs"};
   Object.entries(d).forEach(([k,def])=>{ const el=document.getElementById(k); if(el) el.value=siteData[k]||def; });
 }
-function saveBrand() { ['brandName1','brandName2','brandTagline'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('brand',siteData); toast('Brand saved!'); }
-function saveFooter() { ['footerAbout','footerCopyright','footerTagline'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('footer',siteData); toast('Footer saved!'); }
+function saveBrand() { ['brandName1','brandName2','brandTagline'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('brand'); broadcast('brand',siteData); toast('Brand saved!'); }
+function saveFooter() { ['footerAbout','footerCopyright','footerTagline'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('footer'); broadcast('footer',siteData); toast('Footer saved!'); }
 function resetBrand() { document.getElementById('brandName1').value='INDIAN'; document.getElementById('brandName2').value='GAME FACTORY'; saveBrand(); toast('Reset to default.','info'); }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1593,7 +1646,7 @@ function syncColor(k) {
 }
 function saveColors() {
   const colors={primary:document.getElementById('colorPrimary').value,secondary:document.getElementById('colorSecondary').value,accent:document.getElementById('colorAccent').value,bg:document.getElementById('colorBg').value};
-  setD('colors',colors); broadcast('colors',colors); toast('Colors applied to website!');
+  setD('colors',colors); markSaved('colors'); broadcast('colors',colors); toast('Colors applied to website!');
 }
 function resetColors() { const d={primary:'#ff5722',secondary:'#c0392b',accent:'#ffab40',bg:'#0d0705'}; setD('colors',d); loadFontColors(); broadcast('colors',d); toast('Colors reset.','info'); }
 function updateFontPreviews() {
@@ -1609,7 +1662,7 @@ function updateFontPreviews() {
 }
 function saveFonts() {
   const fonts={heading:document.getElementById('fontHeading').value,sub:document.getElementById('fontSub').value,body:document.getElementById('fontBody').value};
-  setD('fonts',fonts); broadcast('fonts',fonts); toast('Fonts applied!');
+  setD('fonts',fonts); markSaved('fonts'); broadcast('fonts',fonts); toast('Fonts applied!');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1627,10 +1680,10 @@ function renderAboutFeats(feats) {
 }
 function addAboutFeature() { const f=getD('aboutFeatures',DEFAULT_ABOUT_FEATS); f.push('New feature'); renderAboutFeats(f); }
 function removeAboutFeat(i) { const f=getD('aboutFeatures',DEFAULT_ABOUT_FEATS); f.splice(i,1); setD('aboutFeatures',f); renderAboutFeats(f); }
-function saveAbout() { ['aboutTag','aboutTitle','aboutDesc','aboutCta'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('about',siteData); toast('About saved!'); }
-function saveAboutFeatures() { const f=[]; let i=0; while(document.getElementById(`af_${i}`)) { f.push(document.getElementById(`af_${i}`).value); i++; } setD('aboutFeatures',f); broadcast('aboutFeatures',f); toast('Features saved!'); }
-function saveAboutBadge() { setD('aboutBadgeNum',document.getElementById('aboutBadgeNum').value); setD('aboutBadgeLabel',document.getElementById('aboutBadgeLabel').value); broadcast('aboutBadge',siteData); }
-function saveAboutImage() { setD('aboutImgPath',document.getElementById('aboutImgPath').value); broadcast('aboutImgPath',siteData.aboutImgPath); toast('About saved!'); }
+function saveAbout() { ['aboutTag','aboutTitle','aboutDesc','aboutCta'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('about'); broadcast('about',siteData); toast('About saved!'); }
+function saveAboutFeatures() { const f=[]; let i=0; while(document.getElementById(`af_${i}`)) { f.push(document.getElementById(`af_${i}`).value); i++; } setD('aboutFeatures',f); markSaved('aboutFeatures'); broadcast('aboutFeatures',f); toast('Features saved!'); }
+function saveAboutBadge() { setD('aboutBadgeNum',document.getElementById('aboutBadgeNum').value); setD('aboutBadgeLabel',document.getElementById('aboutBadgeLabel').value); markSaved('about'); broadcast('aboutBadge',siteData); }
+function saveAboutImage() { setD('aboutImgPath',document.getElementById('aboutImgPath').value); markSaved('about'); broadcast('aboutImgPath',siteData.aboutImgPath); toast('About image saved!'); }
 
 // ══════════════════════════════════════════════════════════════════
 // TICKER
@@ -1642,37 +1695,93 @@ function renderTicker(items) {
 }
 function addTickerItem() { const items=getD('ticker',DEFAULT_TICKER); items.push('NEW ITEM'); renderTicker(items); }
 function removeTickerItem(i) { const items=getD('ticker',DEFAULT_TICKER); items.splice(i,1); setD('ticker',items); renderTicker(items); }
-function saveTicker() { const items=[]; let i=0; while(document.getElementById(`tick_${i}`)) { items.push(document.getElementById(`tick_${i}`).value); i++; } setD('ticker',items); broadcast('ticker',items); toast('Ticker saved!'); }
+function saveTicker() { const items=[]; let i=0; while(document.getElementById(`tick_${i}`)) { items.push(document.getElementById(`tick_${i}`).value); i++; } setD('ticker',items); markSaved('ticker'); broadcast('ticker',items); toast('Ticker saved!'); }
 
 // ══════════════════════════════════════════════════════════════════
 // CATALOGS
 // ══════════════════════════════════════════════════════════════════
+const AVAILABLE_ICONS = [
+  {name:'Air Hockey',path:'assets/Air-Hockey.svg'},
+  {name:'Bumper Cars',path:'assets/Bumpers-Cars.svg'},
+  {name:'Virtual Reality',path:'assets/Virtual-Reality-Games.svg'},
+  {name:'Trampoline Park',path:'assets/Trampoline-Park.svg'},
+  {name:'Basketball',path:'assets/basketball-machine.svg'},
+  {name:'Bowling Alley',path:'assets/Bowling-Alley.svg'},
+  {name:'Kiddy Rides',path:'assets/Kiddy-Rides-Games.svg'},
+  {name:'Shooting Games',path:'assets/Shooting-Games.svg'},
+  {name:'Gift Redemption',path:'assets/Gift-Redemption.svg'},
+  {name:'Strength Games',path:'assets/Strength-based-Games.svg'},
+  {name:'Inflatables',path:'assets/Inflatables.svg'},
+  {name:'Battery Rides',path:'assets/Battery-Operated-Rides.svg'},
+  {name:'Soft Play',path:'assets/Softplay.svg'},
+  {name:'Bike Racing',path:'assets/bike-racing-game.svg'},
+  {name:'Car Racing',path:'assets/car-racing.svg'},
+  {name:'Train Rides',path:'assets/train-rides.svg'},
+  {name:'Showroom',path:'assets/Biggest-Showroom-in-India-1.svg'},
+  {name:'Quality',path:'assets/Quality-Safety-First-1.svg'},
+  {name:'Reliability',path:'assets/Reliable-Service-Delivery-1.svg'},
+  {name:'Expertise',path:'assets/Expertise-1.svg'},
+];
+
+function buildIconSelector(selectedPath, fieldId) {
+  return `
+    <div style="margin-top:8px;">
+      <select class="field-select" id="${fieldId}" onchange="document.getElementById('${fieldId}_prev').src=this.value;">
+        <option value="">— Select an icon —</option>
+        ${AVAILABLE_ICONS.map(ic=>`<option value="${ic.path}" ${selectedPath===ic.path?'selected':''}>${ic.name}</option>`).join('')}
+        <option value="custom" ${!AVAILABLE_ICONS.find(i=>i.path===selectedPath)?'selected':''}>Custom path...</option>
+      </select>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+        <img id="${fieldId}_prev" src="${selectedPath||''}" style="width:32px;height:32px;object-fit:contain;filter:brightness(0)saturate(100%)invert(50%)sepia(100%)saturate(1000%)hue-rotate(340deg);opacity:0.8;" onerror="this.style.opacity=0.2" />
+        <input class="field-input" id="${fieldId}_custom" placeholder="Or type custom path: assets/icon.svg" value="${!AVAILABLE_ICONS.find(i=>i.path===selectedPath)?selectedPath:''}" oninput="document.getElementById('${fieldId}_prev').src=this.value;document.getElementById('${fieldId}').value='custom';" style="flex:1;" />
+      </div>
+    </div>
+  `;
+}
+
+function getIconValue(fieldId) {
+  const sel = document.getElementById(fieldId);
+  if(sel.value === 'custom' || sel.value === '') return document.getElementById(fieldId+'_custom').value;
+  return sel.value;
+}
+
 function loadCatalogList() {
   const cats = getD('catalogMeta', DEFAULT_CATS);
   document.getElementById('catalogBadge').textContent = cats.length;
   document.getElementById('statCats').textContent = cats.length;
   const c = document.getElementById('catalogList');
-  c.innerHTML = cats.map((cat,i) => `
+  c.innerHTML = cats.map((cat,i) => {
+    const gallery = getD('catalogGallery',{})[cat.id]||[];
+    return `
     <div class="catalog-item">
       <div class="cat-icon-wrap"><img src="${cat.icon}" alt="" onerror="this.style.opacity=0.2"/></div>
       <div class="cat-item-info">
         <div class="cat-item-name">${esc(cat.name)}</div>
-        <div class="cat-item-sub">${cat.productCount||0} products &nbsp;·&nbsp; <span style="color:var(--text-dim);font-family:Orbitron,sans-serif;font-size:0.45rem;">${cat.id}</span></div>
+        <div class="cat-item-sub">${cat.productCount||0} products &nbsp;·&nbsp; ${gallery.length} gallery images &nbsp;·&nbsp; <span style="color:var(--text-dim);font-family:Orbitron,sans-serif;font-size:0.45rem;">${cat.id}</span></div>
       </div>
       <div class="cat-item-actions">
         <button class="action-btn" onclick="editCatalog('${cat.id}')">Edit</button>
+        <button class="action-btn" onclick="openCatalogGallery('${cat.id}')">🖼 Images</button>
         <button class="action-btn" onclick="viewCatalogProducts('${cat.id}')">Products</button>
+        <button class="action-btn" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.3);color:#4ade80;" onclick="openAddProductModal('${cat.id}')">+ Add Product</button>
         <button class="action-btn del" onclick="deleteCatalog('${cat.id}')">Delete</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 function openAddCatalogModal() {
   document.getElementById('modalTitle').textContent='Add New Category';
   document.getElementById('modalBody').innerHTML=`
     <div class="field-row"><div class="field-group"><label class="field-label">Category ID (slug)</label><input class="field-input" id="mc_id" placeholder="laser-games"/></div><div class="field-group"><label class="field-label">Category Name</label><input class="field-input" id="mc_name" placeholder="Laser Games"/></div></div>
     <div class="field-group"><label class="field-label">Description</label><textarea class="field-textarea" id="mc_desc" rows="3" placeholder="Category description..."></textarea></div>
-    <div class="field-row"><div class="field-group"><label class="field-label">Icon Path</label><input class="field-input" id="mc_icon" placeholder="assets/icon.svg"/></div><div class="field-group"><label class="field-label">Thumbnail Path</label><input class="field-input" id="mc_thumb" placeholder="assets/image.png"/></div></div>
+    <div class="field-group"><label class="field-label">Category Icon</label>${buildIconSelector('', 'mc_icon')}</div>
+    <div class="field-group"><label class="field-label">Thumbnail Image (card background)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input class="field-input" id="mc_thumb" placeholder="assets/image.png or URL" style="flex:1;"/>
+        <label style="cursor:pointer;padding:10px 14px;background:rgba(255,87,34,0.1);border:1px solid rgba(255,87,34,0.3);border-radius:4px;font-family:Orbitron,sans-serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-primary);white-space:nowrap;">📁 Upload<input type="file" accept="image/*" style="display:none;" onchange="productImgUpload(this,'mc_thumb_prev','mc_thumb')"/></label>
+      </div>
+      <img id="mc_thumb_prev" style="max-height:60px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:none;margin-top:8px;"/>
+    </div>
     <div class="btn-row"><button class="btn btn-primary" onclick="addCatalog()">Add Category</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
   `;
   openModal();
@@ -1683,9 +1792,11 @@ function addCatalog() {
   if(!id||!name) { toast('ID and Name required!','error'); return; }
   const cats=getD('catalogMeta',DEFAULT_CATS);
   if(cats.find(c=>c.id===id)) { toast('ID already exists!','error'); return; }
-  cats.push({id,name,desc:document.getElementById('mc_desc').value,icon:document.getElementById('mc_icon').value,thumb:document.getElementById('mc_thumb').value,productCount:0});
+  const iconPath = getIconValue('mc_icon');
+  cats.push({id,name,desc:document.getElementById('mc_desc').value,icon:iconPath,thumb:document.getElementById('mc_thumb').value,productCount:0});
   setD('catalogMeta',cats);
   const prods=getD('catalogProducts',{}); prods[id]=[]; setD('catalogProducts',prods);
+  markSaved('catalogs');
   broadcast('catalogs',cats); loadCatalogList(); closeModal(); toast(`Category "${name}" added!`);
 }
 function editCatalog(id) {
@@ -1695,7 +1806,14 @@ function editCatalog(id) {
   document.getElementById('modalBody').innerHTML=`
     <div class="field-group"><label class="field-label">Name</label><input class="field-input" id="ec_name" value="${esc(cat.name||'')}"/></div>
     <div class="field-group"><label class="field-label">Description</label><textarea class="field-textarea" id="ec_desc" rows="3">${esc(cat.desc||'')}</textarea></div>
-    <div class="field-row"><div class="field-group"><label class="field-label">Icon Path</label><input class="field-input" id="ec_icon" value="${esc(cat.icon||'')}"/></div><div class="field-group"><label class="field-label">Thumbnail Path</label><input class="field-input" id="ec_thumb" value="${esc(cat.thumb||'')}"/></div></div>
+    <div class="field-group"><label class="field-label">Category Icon</label>${buildIconSelector(cat.icon||'', 'ec_icon')}</div>
+    <div class="field-group"><label class="field-label">Thumbnail Image (card background)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input class="field-input" id="ec_thumb" value="${esc(cat.thumb||'')}" placeholder="assets/image.png or URL" style="flex:1;"/>
+        <label style="cursor:pointer;padding:10px 14px;background:rgba(255,87,34,0.1);border:1px solid rgba(255,87,34,0.3);border-radius:4px;font-family:Orbitron,sans-serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-primary);white-space:nowrap;">📁 Upload<input type="file" accept="image/*" style="display:none;" onchange="productImgUpload(this,'ec_thumb_prev','ec_thumb')"/></label>
+      </div>
+      ${cat.thumb ? `<img id="ec_thumb_prev" src="${esc(cat.thumb)}" style="max-height:60px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:block;margin-top:8px;"/>` : `<img id="ec_thumb_prev" style="max-height:60px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:none;margin-top:8px;"/>`}
+    </div>
     <div class="btn-row"><button class="btn btn-primary" onclick="saveCatalogEdit('${id}')">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
   `;
   openModal();
@@ -1705,12 +1823,113 @@ function saveCatalogEdit(id) {
   const idx=cats.findIndex(c=>c.id===id); if(idx===-1) return;
   cats[idx].name=document.getElementById('ec_name').value;
   cats[idx].desc=document.getElementById('ec_desc').value;
-  cats[idx].icon=document.getElementById('ec_icon').value;
+  cats[idx].icon=getIconValue('ec_icon');
   cats[idx].thumb=document.getElementById('ec_thumb').value;
-  setD('catalogMeta',cats); broadcast('catalogs',cats); loadCatalogList(); closeModal(); toast('Category updated!');
+  setD('catalogMeta',cats); markSaved('catalogs'); broadcast('catalogs',cats); loadCatalogList(); closeModal(); toast('Category updated!');
+}
+
+// ── CATALOG IMAGE GALLERY ──
+function openCatalogGallery(catId) {
+  const cats=getD('catalogMeta',DEFAULT_CATS);
+  const cat=cats.find(c=>c.id===catId)||{name:catId};
+  const galleries=getD('catalogGallery',{});
+  const imgs=galleries[catId]||[];
+  document.getElementById('modalTitle').textContent=`Gallery: ${cat.name}`;
+  document.getElementById('modalBody').innerHTML=renderGalleryModal(catId, imgs);
+  openModal();
+}
+function renderGalleryModal(catId, imgs) {
+  const imgHtml = imgs.length>0 ? imgs.map((img,i)=>{
+    const src = img.path||img;
+    const isBase64 = src.startsWith('data:');
+    const display = isBase64 ? '[Uploaded Image]' : src;
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:6px;margin-bottom:8px;">
+      <img src="${esc(src)}" style="width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid rgba(255,87,34,0.2);" onerror="this.style.opacity=0.2"/>
+      <div style="flex:1;">
+        <input class="field-input" value="${esc(isBase64?'[uploaded-image-'+i+']':src)}" id="cg_img_${i}" placeholder="Image path..." style="width:100%;" data-src="${isBase64?'__b64_'+i:''}" />
+        <input class="field-input" value="${esc(img.caption||'')}" id="cg_cap_${i}" placeholder="Caption (optional)" style="width:100%;margin-top:4px;font-size:0.8rem;" />
+        ${isBase64 ? `<input type="hidden" id="cg_b64_${i}" value="${esc(src)}"/>` : ''}
+      </div>
+      <button class="icon-remove" onclick="removeCatalogImage('${catId}',${i})">✕</button>
+    </div>`;
+  }).join('') : '<div style="color:var(--text-muted);font-size:0.82rem;padding:16px;text-align:center;">No images yet. Add images below.</div>';
+  return `
+    <div id="cgImgList">${imgHtml}</div>
+    <div style="margin-top:16px;padding:14px;background:rgba(255,87,34,0.03);border:1px solid rgba(255,87,34,0.1);border-radius:6px;">
+      <div style="font-family:Orbitron,sans-serif;font-size:0.52rem;letter-spacing:0.18em;color:var(--igf-orange);margin-bottom:12px;">ADD NEW IMAGE</div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
+        <input class="field-input" id="cg_new_path" placeholder="Image path: assets/image.png or URL" style="width:100%;"/>
+        <label style="cursor:pointer;padding:10px 16px;background:rgba(255,87,34,0.1);border:1px solid rgba(255,87,34,0.3);border-radius:4px;font-family:Orbitron,sans-serif;font-size:0.5rem;letter-spacing:0.12em;color:var(--text-primary);white-space:nowrap;">📁 Upload from Computer<input type="file" accept="image/*" style="display:none;" onchange="handleGalleryFileUpload(this)"/></label>
+      </div>
+      <div id="cg_upload_preview" style="display:none;margin-bottom:10px;"><img id="cg_upload_img" style="max-height:80px;border-radius:4px;border:1px solid rgba(255,87,34,0.3);" /><span style="font-size:0.75rem;color:var(--success);margin-left:8px;">✓ Image ready to add</span></div>
+      <input class="field-input" id="cg_new_cap" placeholder="Caption (optional)" style="width:100%;margin-bottom:12px;"/>
+      <button class="btn btn-secondary btn-sm" onclick="addCatalogImage('${catId}')">+ Add Image</button>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="saveCatalogGallery('${catId}')">💾 Save Gallery</button><button class="btn btn-secondary" onclick="closeModal()">Close</button></div>
+  `;
+}
+let _pendingGalleryBase64 = null;
+function handleGalleryFileUpload(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    _pendingGalleryBase64 = e.target.result;
+    document.getElementById('cg_new_path').value = file.name;
+    document.getElementById('cg_upload_preview').style.display = 'block';
+    document.getElementById('cg_upload_img').src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function addCatalogImage(catId) {
+  let path = _pendingGalleryBase64 || document.getElementById('cg_new_path').value.trim();
+  if(!path) { toast('Enter an image path or upload a file','error'); return; }
+  const galleries=getD('catalogGallery',{});
+  if(!galleries[catId]) galleries[catId]=[];
+  galleries[catId].push({path, caption:document.getElementById('cg_new_cap').value.trim()});
+  setD('catalogGallery',galleries);
+  markSaved('catalogs');
+  broadcast('catalogGallery',galleries);
+  _pendingGalleryBase64 = null;
+  openCatalogGallery(catId);
+  toast('Image added!');
+}
+function removeCatalogImage(catId, idx) {
+  const galleries=getD('catalogGallery',{});
+  if(!galleries[catId]) return;
+  galleries[catId].splice(idx,1);
+  setD('catalogGallery',galleries);
+  markSaved('catalogs');
+  broadcast('catalogGallery',galleries);
+  openCatalogGallery(catId);
+  toast('Image removed.','error');
+}
+function saveCatalogGallery(catId) {
+  const galleries=getD('catalogGallery',{});
+  if(!galleries[catId]) galleries[catId]=[];
+  let i=0;
+  while(document.getElementById(`cg_img_${i}`)) {
+    if(galleries[catId][i]) {
+      // If it's a base64-stored image, keep original src
+      const b64El = document.getElementById(`cg_b64_${i}`);
+      if(b64El) {
+        galleries[catId][i].path = b64El.value;
+      } else {
+        galleries[catId][i].path=document.getElementById(`cg_img_${i}`).value;
+      }
+      galleries[catId][i].caption=document.getElementById(`cg_cap_${i}`).value;
+    }
+    i++;
+  }
+  setD('catalogGallery',galleries);
+  markSaved('catalogs');
+  broadcast('catalogGallery',galleries);
+  loadCatalogList();
+  toast('Gallery saved!');
+  closeModal();
 }
 function deleteCatalog(id) {
-  confirmCallback=()=>{ const cats=getD('catalogMeta',DEFAULT_CATS).filter(c=>c.id!==id); setD('catalogMeta',cats); broadcast('catalogs',cats); loadCatalogList(); toast('Deleted.','error'); };
+  confirmCallback=()=>{ const cats=getD('catalogMeta',DEFAULT_CATS).filter(c=>c.id!==id); setD('catalogMeta',cats); markSaved('catalogs'); broadcast('catalogs',cats); loadCatalogList(); toast('Deleted.','error'); };
   showConfirm(`Delete category "${id}" and all its products?`);
 }
 function viewCatalogProducts(id) { showPanel('products'); setTimeout(()=>{ document.getElementById('productCatFilter').value=id; filterProducts(); },100); }
@@ -1759,31 +1978,105 @@ function filterProducts() {
   if(!total) html='<div style="color:var(--text-muted);font-size:0.85rem;grid-column:1/-1;padding:24px;text-align:center;"><div style="font-family:Orbitron,sans-serif;font-size:0.6rem;letter-spacing:0.15em;margin-bottom:8px;">NO PRODUCTS FOUND</div>Products saved via the main site will appear once catalog data is initialized.</div>';
   c.innerHTML=html;
 }
+function productImgUpload(inputEl, previewId, pathId) {
+  const file = inputEl.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById(pathId).value = e.target.result;
+    const prev = document.getElementById(previewId);
+    if(prev) { prev.src = e.target.result; prev.style.display = 'block'; }
+  };
+  reader.readAsDataURL(file);
+}
 function editProduct(catId, pi) {
   const prods=getD('catalogProducts',{});
   const p=(prods[catId]||[])[pi]||{};
   document.getElementById('modalTitle').textContent=`Edit: ${p.name||'Product'}`;
   document.getElementById('modalBody').innerHTML=`
     <div class="field-group"><label class="field-label">Name</label><input class="field-input" id="ep_name" value="${esc(p.name||'')}"/></div>
-    <div class="field-row"><div class="field-group"><label class="field-label">Image Path</label><input class="field-input" id="ep_img" value="${esc(p.image||'')}"/></div><div class="field-group"><label class="field-label">Tag</label><input class="field-input" id="ep_tag" value="${esc(p.tag||'')}"/></div></div>
+    <div class="field-group"><label class="field-label">Image</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+        <input class="field-input" id="ep_img" value="${esc(p.image||'')}" placeholder="assets/image.png or URL" style="flex:1;"/>
+        <label style="cursor:pointer;padding:10px 14px;background:rgba(255,87,34,0.1);border:1px solid rgba(255,87,34,0.3);border-radius:4px;font-family:Orbitron,sans-serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-primary);white-space:nowrap;">📁 Upload<input type="file" accept="image/*" style="display:none;" onchange="productImgUpload(this,'ep_img_prev','ep_img')"/></label>
+      </div>
+      ${p.image ? `<img id="ep_img_prev" src="${esc(p.image)}" style="max-height:70px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:block;margin-bottom:8px;"/>` : `<img id="ep_img_prev" style="max-height:70px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:none;margin-bottom:8px;"/>`}
+    </div>
+    <div class="field-group"><label class="field-label">Tag / Badge</label><input class="field-input" id="ep_tag" value="${esc(p.tag||'')}"/></div>
     <div class="field-group"><label class="field-label">Short Description</label><input class="field-input" id="ep_short" value="${esc(p.shortDesc||'')}"/></div>
     <div class="field-group"><label class="field-label">Full Description</label><textarea class="field-textarea" id="ep_full" rows="4">${esc(p.fullDesc||'')}</textarea></div>
     <div class="field-group"><label class="field-label">Features (one per line)</label><textarea class="field-textarea" id="ep_feats" rows="4">${(p.features||[]).join('\n')}</textarea></div>
-    <div class="btn-row"><button class="btn btn-primary" onclick="saveProductEdit('${catId}',${pi})">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="saveProductEdit('${catId}',${pi})">Save Changes</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
   `;
   openModal();
 }
 function saveProductEdit(catId, pi) {
   const prods=getD('catalogProducts',{}); if(!prods[catId]) prods[catId]=[];
   const p=prods[catId][pi]||{};
-  p.name=document.getElementById('ep_name').value; p.image=document.getElementById('ep_img').value;
-  p.tag=document.getElementById('ep_tag').value; p.shortDesc=document.getElementById('ep_short').value;
+  p.name=document.getElementById('ep_name').value;
+  p.image=document.getElementById('ep_img').value;
+  p.tag=document.getElementById('ep_tag').value;
+  p.shortDesc=document.getElementById('ep_short').value;
   p.fullDesc=document.getElementById('ep_full').value;
   p.features=document.getElementById('ep_feats').value.split('\n').filter(Boolean);
-  prods[catId][pi]=p; setD('catalogProducts',prods); broadcast('products',prods); filterProducts(); closeModal(); toast('Product saved!');
+  p.specs=[];
+  prods[catId][pi]=p;
+  // Update product count
+  const cats=getD('catalogMeta',DEFAULT_CATS);
+  const idx=cats.findIndex(c=>c.id===catId);
+  if(idx>=0) { cats[idx].productCount=(prods[catId]||[]).length; setD('catalogMeta',cats); }
+  setD('catalogProducts',prods); markSaved('catalogs'); broadcast('products',prods); filterProducts(); closeModal(); toast('Product saved!');
+}
+function openAddProductModal(catIdPrefill) {
+  const cats=getD('catalogMeta',DEFAULT_CATS);
+  const selOpts=cats.map(c=>`<option value="${c.id}" ${catIdPrefill===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  document.getElementById('modalTitle').textContent='Add New Product';
+  document.getElementById('modalBody').innerHTML=`
+    <div class="field-group"><label class="field-label">Category</label><select class="field-select" id="np_cat">${selOpts}</select></div>
+    <div class="field-group"><label class="field-label">Product Name</label><input class="field-input" id="np_name" placeholder="e.g. Super Air Hockey Pro"/></div>
+    <div class="field-group"><label class="field-label">Image</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+        <input class="field-input" id="np_img" placeholder="assets/image.png or URL" style="flex:1;"/>
+        <label style="cursor:pointer;padding:10px 14px;background:rgba(255,87,34,0.1);border:1px solid rgba(255,87,34,0.3);border-radius:4px;font-family:Orbitron,sans-serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-primary);white-space:nowrap;">📁 Upload<input type="file" accept="image/*" style="display:none;" onchange="productImgUpload(this,'np_img_prev','np_img')"/></label>
+      </div>
+      <img id="np_img_prev" style="max-height:70px;border-radius:4px;border:1px solid rgba(255,87,34,0.2);display:none;margin-bottom:8px;"/>
+    </div>
+    <div class="field-group"><label class="field-label">Tag / Badge</label><input class="field-input" id="np_tag" placeholder="NEW / HOT / BESTSELLER"/></div>
+    <div class="field-group"><label class="field-label">Short Description</label><input class="field-input" id="np_short" placeholder="Brief product summary..."/></div>
+    <div class="field-group"><label class="field-label">Full Description</label><textarea class="field-textarea" id="np_full" rows="4" placeholder="Detailed product description..."></textarea></div>
+    <div class="field-group"><label class="field-label">Features (one per line)</label><textarea class="field-textarea" id="np_feats" rows="4" placeholder="Feature 1\nFeature 2\nFeature 3"></textarea></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="saveNewProduct()">✓ Add Product</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
+  `;
+  openModal();
+}
+function saveNewProduct() {
+  const catId=document.getElementById('np_cat').value;
+  const name=document.getElementById('np_name').value.trim();
+  if(!catId||!name) { toast('Category and Name required!','error'); return; }
+  const prods=getD('catalogProducts',{});
+  if(!prods[catId]) prods[catId]=[];
+  const id=catId+'-'+Date.now();
+  prods[catId].push({
+    id, name,
+    image:document.getElementById('np_img').value,
+    tag:document.getElementById('np_tag').value,
+    shortDesc:document.getElementById('np_short').value,
+    fullDesc:document.getElementById('np_full').value,
+    features:document.getElementById('np_feats').value.split('\n').filter(Boolean),
+    specs:[]
+  });
+  // Update product count
+  const cats=getD('catalogMeta',DEFAULT_CATS);
+  const idx=cats.findIndex(c=>c.id===catId);
+  if(idx>=0) { cats[idx].productCount=prods[catId].length; setD('catalogMeta',cats); }
+  setD('catalogProducts',prods);
+  markSaved('catalogs');
+  broadcast('products',prods);
+  filterProducts();
+  closeModal();
+  toast(`Product "${name}" added!`);
 }
 function deleteProduct(catId, pi) {
-  confirmCallback=()=>{ const prods=getD('catalogProducts',{}); if(prods[catId]) prods[catId].splice(pi,1); setD('catalogProducts',prods); broadcast('products',prods); filterProducts(); toast('Deleted.','error'); };
+  confirmCallback=()=>{ const prods=getD('catalogProducts',{}); if(prods[catId]) prods[catId].splice(pi,1); setD('catalogProducts',prods); markSaved('catalogs'); broadcast('products',prods); filterProducts(); toast('Deleted.','error'); };
   showConfirm('Delete this product?');
 }
 
@@ -1812,8 +2105,8 @@ function loadGalleryList() {
 function openAddGalleryModal() { document.getElementById('modalTitle').textContent='Add Gallery Item'; document.getElementById('modalBody').innerHTML=galleryForm({})+'<div class="btn-row"><button class="btn btn-primary" onclick="saveGallery(-1)">Add</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>'; openModal(); }
 function editGallery(i) { const items=getD('gallery',DEFAULT_GALLERY); document.getElementById('modalTitle').textContent='Edit Gallery Item'; document.getElementById('modalBody').innerHTML=galleryForm(items[i]||{})+'<div class="btn-row"><button class="btn btn-primary" onclick="saveGallery('+i+')">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>'; openModal(); }
 function galleryForm(g) { return `<div class="field-row"><div class="field-group"><label class="field-label">Tag</label><input class="field-input" id="gi_tag" value="${esc(g.tag||'')}"/></div><div class="field-group"><label class="field-label">Category</label><input class="field-input" id="gi_cat" value="${esc(g.cat||'')}"/></div></div><div class="field-group"><label class="field-label">Name</label><input class="field-input" id="gi_name" value="${esc(g.name||'')}"/></div><div class="field-group"><label class="field-label">Description</label><textarea class="field-textarea" id="gi_text">${esc(g.text||'')}</textarea></div><div class="field-group"><label class="field-label">Image Path/URL</label><input class="field-input" id="gi_img" value="${esc(g.img||'')}"/></div>`; }
-function saveGallery(idx) { const items=getD('gallery',DEFAULT_GALLERY); const obj={tag:document.getElementById('gi_tag').value,cat:document.getElementById('gi_cat').value,name:document.getElementById('gi_name').value,text:document.getElementById('gi_text').value,img:document.getElementById('gi_img').value}; if(idx===-1) items.push(obj); else items[idx]=obj; setD('gallery',items); broadcast('gallery',items); loadGalleryList(); closeModal(); toast(idx===-1?'Item added!':'Item saved!'); }
-function deleteGallery(i) { confirmCallback=()=>{ const items=getD('gallery',DEFAULT_GALLERY); items.splice(i,1); setD('gallery',items); broadcast('gallery',items); loadGalleryList(); toast('Deleted.','error'); }; showConfirm('Delete this gallery item?'); }
+function saveGallery(idx) { const items=getD('gallery',DEFAULT_GALLERY); const obj={tag:document.getElementById('gi_tag').value,cat:document.getElementById('gi_cat').value,name:document.getElementById('gi_name').value,text:document.getElementById('gi_text').value,img:document.getElementById('gi_img').value}; if(idx===-1) items.push(obj); else items[idx]=obj; setD('gallery',items); markSaved('gallery'); broadcast('gallery',items); loadGalleryList(); closeModal(); toast(idx===-1?'Item added!':'Item saved!'); }
+function deleteGallery(i) { confirmCallback=()=>{ const items=getD('gallery',DEFAULT_GALLERY); items.splice(i,1); setD('gallery',items); markSaved('gallery'); broadcast('gallery',items); loadGalleryList(); toast('Deleted.','error'); }; showConfirm('Delete this gallery item?'); }
 
 // ══════════════════════════════════════════════════════════════════
 // TESTIMONIALS
@@ -1840,8 +2133,8 @@ function loadTestimonialList() {
 function openAddTestimonialModal() { document.getElementById('modalTitle').textContent='Add Testimonial'; document.getElementById('modalBody').innerHTML=testiForm({})+'<div class="btn-row"><button class="btn btn-primary" onclick="saveTesti(-1)">Add</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>'; openModal(); }
 function editTesti(i) { const items=getD('testimonials',DEFAULT_TESTIS); document.getElementById('modalTitle').textContent='Edit Testimonial'; document.getElementById('modalBody').innerHTML=testiForm(items[i]||{})+'<div class="btn-row"><button class="btn btn-primary" onclick="saveTesti('+i+')">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>'; openModal(); }
 function testiForm(t) { return `<div class="field-row"><div class="field-group"><label class="field-label">Name</label><input class="field-input" id="ti_name" value="${esc(t.name||'')}"/></div><div class="field-group"><label class="field-label">Role / Company</label><input class="field-input" id="ti_role" value="${esc(t.role||'')}"/></div></div><div class="field-row"><div class="field-group"><label class="field-label">Initials (2 chars)</label><input class="field-input" id="ti_init" value="${esc(t.initials||'')}" maxlength="2"/></div><div class="field-group"><label class="field-label">Stars (1–5)</label><input class="field-input" id="ti_stars" type="number" min="1" max="5" value="${t.stars||5}"/></div></div><div class="field-group"><label class="field-label">Review Text</label><textarea class="field-textarea" id="ti_text" rows="4">${esc(t.text||'')}</textarea></div>`; }
-function saveTesti(idx) { const items=getD('testimonials',DEFAULT_TESTIS); const obj={name:document.getElementById('ti_name').value,role:document.getElementById('ti_role').value,initials:document.getElementById('ti_init').value.toUpperCase(),stars:parseInt(document.getElementById('ti_stars').value)||5,text:document.getElementById('ti_text').value}; if(idx===-1) items.push(obj); else items[idx]=obj; setD('testimonials',items); broadcast('testimonials',items); loadTestimonialList(); closeModal(); toast(idx===-1?'Added!':'Saved!'); }
-function deleteTesti(i) { confirmCallback=()=>{ const items=getD('testimonials',DEFAULT_TESTIS); items.splice(i,1); setD('testimonials',items); broadcast('testimonials',items); loadTestimonialList(); toast('Deleted.','error'); }; showConfirm('Delete this testimonial?'); }
+function saveTesti(idx) { const items=getD('testimonials',DEFAULT_TESTIS); const obj={name:document.getElementById('ti_name').value,role:document.getElementById('ti_role').value,initials:document.getElementById('ti_init').value.toUpperCase(),stars:parseInt(document.getElementById('ti_stars').value)||5,text:document.getElementById('ti_text').value}; if(idx===-1) items.push(obj); else items[idx]=obj; setD('testimonials',items); markSaved('testimonials'); broadcast('testimonials',items); loadTestimonialList(); closeModal(); toast(idx===-1?'Added!':'Saved!'); }
+function deleteTesti(i) { confirmCallback=()=>{ const items=getD('testimonials',DEFAULT_TESTIS); items.splice(i,1); setD('testimonials',items); markSaved('testimonials'); broadcast('testimonials',items); loadTestimonialList(); toast('Deleted.','error'); }; showConfirm('Delete this testimonial?'); }
 
 // ══════════════════════════════════════════════════════════════════
 // WHY CHOOSE US
@@ -1863,10 +2156,10 @@ function renderWhyCards(cards) {
   `).join('');
 }
 function addWhyCard() { const c=getD('whyCards',DEFAULT_WHY_CARDS); c.push({icon:'⭐',title:'New Feature',text:'Description...'}); renderWhyCards(c); }
-function removeWhyCard(i) { const c=getD('whyCards',DEFAULT_WHY_CARDS); c.splice(i,1); setD('whyCards',c); renderWhyCards(c); }
-function saveWhyHeader() { ['whyTag','whyTitle','whyDesc'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('why',siteData); toast('Header saved!'); }
-function saveWhyCards() { const cards=[]; let i=0; while(document.getElementById(`wc_icon_${i}`)) { cards.push({icon:document.getElementById(`wc_icon_${i}`).value,title:document.getElementById(`wc_title_${i}`).value,text:document.getElementById(`wc_text_${i}`).value}); i++; } setD('whyCards',cards); broadcast('whyCards',cards); toast('Cards saved!'); }
-function saveWhyQuote() { setD('whyQuoteText',document.getElementById('whyQuoteText').value); setD('whyQuoteAuthor',document.getElementById('whyQuoteAuthor').value); broadcast('whyQuote',siteData); toast('Quote saved!'); }
+function removeWhyCard(i) { const c=getD('whyCards',DEFAULT_WHY_CARDS); c.splice(i,1); setD('whyCards',c); markSaved('whyCards'); renderWhyCards(c); }
+function saveWhyHeader() { ['whyTag','whyTitle','whyDesc'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('whyHeader'); broadcast('why',siteData); toast('Header saved!'); }
+function saveWhyCards() { const cards=[]; let i=0; while(document.getElementById(`wc_icon_${i}`)) { cards.push({icon:document.getElementById(`wc_icon_${i}`).value,title:document.getElementById(`wc_title_${i}`).value,text:document.getElementById(`wc_text_${i}`).value}); i++; } setD('whyCards',cards); markSaved('whyCards'); broadcast('whyCards',cards); toast('Cards saved!'); }
+function saveWhyQuote() { setD('whyQuoteText',document.getElementById('whyQuoteText').value); setD('whyQuoteAuthor',document.getElementById('whyQuoteAuthor').value); markSaved('whyQuote'); broadcast('whyQuote',siteData); toast('Quote saved!'); }
 
 // ══════════════════════════════════════════════════════════════════
 // CONTACT
@@ -1875,8 +2168,8 @@ function loadContactInfo() {
   const d={contactAddress:'123 Industrial Zone, Sector 44, Gurugram, Haryana 122003',contactPhone:'+91 92622 60376',contactWA:'919262260376',contactEmail:'sales@nexusamusement.in',contactHours:'Mon–Sat: 9 AM – 7 PM',ctaTitle1:'Ready to Build Your',ctaTitle2:'Ultimate Game Zone?',ctaSub:'Get a free layout consultation and product recommendations tailored to your space.'};
   Object.entries(d).forEach(([k,def])=>{ const el=document.getElementById(k); if(el) el.value=siteData[k]||def; });
 }
-function saveContact() { ['contactAddress','contactPhone','contactWA','contactEmail','contactHours'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('contact',siteData); toast('Contact saved!'); }
-function saveCTA() { ['ctaTitle1','ctaTitle2','ctaSub'].forEach(k=>setD(k,document.getElementById(k).value)); broadcast('cta',siteData); toast('CTA saved!'); }
+function saveContact() { ['contactAddress','contactPhone','contactWA','contactEmail','contactHours'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('contact'); broadcast('contact',siteData); toast('Contact saved!'); }
+function saveCTA() { ['ctaTitle1','ctaTitle2','ctaSub'].forEach(k=>setD(k,document.getElementById(k).value)); markSaved('cta'); broadcast('cta',siteData); toast('CTA saved!'); }
 
 // ══════════════════════════════════════════════════════════════════
 // SECTIONS TOGGLE
@@ -1887,17 +2180,114 @@ function toggleSection(sec) {
   const el=document.getElementById(id);
   if(!el) return;
   vis[sec]=el.checked;
-  setD('sectionVis',vis); broadcast('sectionVis',vis);
+  setD('sectionVis',vis); markSaved('sectionVis'); broadcast('sectionVis',vis);
   toast(`Section ${vis[sec]?'shown':'hidden'} on website.`,'info');
 }
 
 // ══════════════════════════════════════════════════════════════════
 // SEO & SETTINGS
 // ══════════════════════════════════════════════════════════════════
-function saveSEO() { setD('metaTitle',document.getElementById('metaTitle').value); setD('metaDesc',document.getElementById('metaDesc').value); broadcast('seo',siteData); toast('SEO saved!'); }
+function saveSEO() { setD('metaTitle',document.getElementById('metaTitle').value); setD('metaDesc',document.getElementById('metaDesc').value); markSaved('seo'); broadcast('seo',siteData); toast('SEO saved!'); }
 function exportData() { const b=new Blob([JSON.stringify(siteData,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='igf_admin_settings.json'; a.click(); toast('Settings exported!'); }
 function importData(e) { const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ try { siteData=JSON.parse(ev.target.result); localStorage.setItem(STORAGE_KEY,JSON.stringify(siteData)); broadcast('fullImport',siteData); initAdmin(); toast('Imported!'); } catch { toast('Invalid JSON.','error'); } }; r.readAsText(f); }
 function confirmReset() { confirmCallback=()=>{ siteData={}; localStorage.removeItem(STORAGE_KEY); broadcast('reset',{}); initAdmin(); toast('Reset complete.','info'); }; showConfirm('Reset ALL settings to default? This cannot be undone!'); }
+
+// ══════════════════════════════════════════════════════════════════
+// PAYMENT SETTINGS
+// ══════════════════════════════════════════════════════════════════
+const DEFAULT_PRESETS = [
+  {amount:500, label:'₹500'},
+  {amount:1000, label:'₹1000'},
+  {amount:2500, label:'₹2500'},
+  {amount:5000, label:'₹5000'},
+  {amount:10000, label:'₹10000'}
+];
+
+function loadPaymentSettings() {
+  const ps = getD('paymentSettings', {});
+  if(document.getElementById('rzpKey')) document.getElementById('rzpKey').value = ps.razorpayKey || '';
+  if(document.getElementById('rzpBizName')) document.getElementById('rzpBizName').value = ps.businessName || 'Indian Game Factory';
+  if(document.getElementById('payUpiId')) document.getElementById('payUpiId').value = ps.upiId || '9262260376@ptsbi';
+  if(document.getElementById('payPhone')) document.getElementById('payPhone').value = ps.contactPhone || '+91 92622 60376';
+  if(document.getElementById('payQrPath')) document.getElementById('payQrPath').value = ps.qrPath || 'assets/upi-qr.png';
+  const presets = ps.presetAmounts && ps.presetAmounts.length > 0 ? ps.presetAmounts : DEFAULT_PRESETS;
+  renderPresets(presets);
+}
+
+function renderPresets(presets) {
+  const c = document.getElementById('presetAmountsList');
+  if(!c) return;
+  c.innerHTML = presets.map((p,i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,87,34,0.04);border:1px solid rgba(255,87,34,0.1);border-radius:6px;margin-bottom:8px;">
+      <span style="font-family:Orbitron,sans-serif;font-size:0.45rem;letter-spacing:0.1em;color:var(--text-dim);width:20px;">#${i+1}</span>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><div style="font-family:Orbitron,sans-serif;font-size:0.44rem;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:4px;">AMOUNT (₹)</div><input class="field-input" id="pa_amt_${i}" type="number" value="${p.amount}" placeholder="1000" style="width:100%;"/></div>
+        <div><div style="font-family:Orbitron,sans-serif;font-size:0.44rem;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:4px;">LABEL (shown on button)</div><input class="field-input" id="pa_lbl_${i}" value="${esc(p.label||('₹'+p.amount))}" placeholder="₹1000" style="width:100%;"/></div>
+      </div>
+      <button class="icon-remove" onclick="removePreset(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addPresetAmount() {
+  const ps = getD('paymentSettings', {});
+  const presets = ps.presetAmounts && ps.presetAmounts.length > 0 ? ps.presetAmounts : [...DEFAULT_PRESETS];
+  presets.push({amount: 100, label: '₹100'});
+  ps.presetAmounts = presets;
+  setD('paymentSettings', ps);
+  markSaved('payment');
+  renderPresets(presets);
+}
+
+function removePreset(idx) {
+  const ps = getD('paymentSettings', {});
+  const presets = ps.presetAmounts && ps.presetAmounts.length > 0 ? ps.presetAmounts : [...DEFAULT_PRESETS];
+  presets.splice(idx, 1);
+  ps.presetAmounts = presets;
+  setD('paymentSettings', ps);
+  markSaved('payment');
+  renderPresets(presets);
+  toast('Preset removed.', 'info');
+}
+
+function savePresetAmounts() {
+  const ps = getD('paymentSettings', {});
+  const presets = [];
+  let i = 0;
+  while(document.getElementById(`pa_amt_${i}`)) {
+    const amt = parseFloat(document.getElementById(`pa_amt_${i}`).value) || 0;
+    const lbl = document.getElementById(`pa_lbl_${i}`).value || ('₹' + amt);
+    if(amt > 0) presets.push({amount: amt, label: lbl});
+    i++;
+  }
+  if(presets.length === 0) { toast('Add at least one amount!', 'error'); return; }
+  ps.presetAmounts = presets;
+  setD('paymentSettings', ps);
+  markSaved('payment');
+  broadcast('paymentSettings', ps);
+  toast('Preset amounts saved! Payment page updated.');
+}
+
+function savePaymentSettings() {
+  const ps = getD('paymentSettings', {});
+  ps.razorpayKey = document.getElementById('rzpKey').value.trim();
+  ps.businessName = document.getElementById('rzpBizName').value.trim() || 'Indian Game Factory';
+  setD('paymentSettings', ps);
+  markSaved('payment');
+  broadcast('paymentSettings', ps);
+  toast('Razorpay config saved!');
+}
+
+function savePaymentContact() {
+  const ps = getD('paymentSettings', {});
+  ps.upiId = document.getElementById('payUpiId').value.trim();
+  ps.contactPhone = document.getElementById('payPhone').value.trim();
+  ps.qrPath = document.getElementById('payQrPath').value.trim();
+  setD('paymentSettings', ps);
+  markSaved('payment');
+  broadcast('paymentSettings', ps);
+  toast('Payment contact info saved!');
+}
 
 // ══════════════════════════════════════════════════════════════════
 // GLOBAL SAVE
