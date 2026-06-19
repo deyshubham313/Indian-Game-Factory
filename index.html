@@ -2596,9 +2596,8 @@ function openCatOverlay(catKey) {
   // ── Merge admin localStorage data with hardcoded CATEGORIES ──
   let cat = CATEGORIES[catKey] ? JSON.parse(JSON.stringify(CATEGORIES[catKey])) : null;
 
-  // Pull admin data from localStorage
-  let adminSiteData = {};
-  try { adminSiteData = JSON.parse(localStorage.getItem('igf_site_data') || '{}'); } catch(e) {}
+  // Pull admin data from global settings
+  const adminSiteData = window.igfSiteData || {};
   const adminMeta = (adminSiteData.catalogMeta || []).find(c => c.id === catKey);
   const adminProds = (adminSiteData.catalogProducts || {})[catKey] || [];
   const adminGallery = (adminSiteData.catalogGallery || {})[catKey] || [];
@@ -2699,8 +2698,7 @@ function openProdModal(catKey, prodId, catObjOverride) {
   // Get cat from override (admin merged), fallback to hardcoded
   const cat = catObjOverride || (function() {
     if (CATEGORIES[catKey]) return CATEGORIES[catKey];
-    let adminSiteData = {};
-    try { adminSiteData = JSON.parse(localStorage.getItem('igf_site_data') || '{}'); } catch(e) {}
+    const adminSiteData = window.igfSiteData || {};
     const adminMeta = (adminSiteData.catalogMeta || []).find(c => c.id === catKey);
     if (adminMeta) return { name: adminMeta.name, icon: adminMeta.icon||'', desc: adminMeta.desc||'', products: (adminSiteData.catalogProducts||{})[catKey]||[] };
     return null;
@@ -3018,8 +3016,9 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
   'use strict';
   const STORAGE_KEY = 'igf_site_data';
-  let siteData = {};
-  try { siteData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+  window.igfSiteData = {};
+  try { window.igfSiteData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+  let siteData = window.igfSiteData;
 
   // Only apply a value if it was EXPLICITLY saved by admin (not a default read)
   // We track this via a 'savedSections' set in localStorage
@@ -3288,15 +3287,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Apply on page load
-  applySiteData(siteData);
+  applySiteData(window.igfSiteData);
+
+  // Fetch settings from server
+  fetch('./igf_admin_settings.json?v=' + Date.now())
+    .then(res => {
+      if (res.ok) return res.json();
+      throw new Error('No settings json found on server');
+    })
+    .then(fetchedData => {
+      window.igfFetchedSiteData = fetchedData;
+      let localData = {};
+      try { localData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+      window.igfSiteData = Object.assign({}, fetchedData, localData);
+      applySiteData(window.igfSiteData);
+    })
+    .catch(e => {
+      console.log('Using local/default settings:', e.message);
+    });
 
   // Live sync via BroadcastChannel
   if(window.BroadcastChannel) {
     const bc = new BroadcastChannel('igf_admin');
     bc.onmessage = function() {
       try {
-        siteData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        applySiteData(siteData);
+        const localData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        window.igfSiteData = Object.assign({}, window.igfFetchedSiteData || {}, localData);
+        applySiteData(window.igfSiteData);
       } catch(e) {}
     };
   }

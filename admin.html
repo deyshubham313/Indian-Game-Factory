@@ -1434,8 +1434,31 @@ document.addEventListener('mouseover', e => { if(e.target.closest('a,button,.nav
 // ══════════════════════════════════════════════════════════════════
 const ADMIN_ID = 'Sd', ADMIN_PW = 'indian factory by sd';
 const STORAGE_KEY = 'igf_site_data';
-let siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+let siteData = {};
+try { siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch(e) {}
 let confirmCallback = null;
+
+// Pre-populate/merge settings from server
+fetch('./igf_admin_settings.json?v=' + Date.now())
+  .then(res => {
+    if (res.ok) return res.json();
+    throw new Error('No json');
+  })
+  .then(fetchedData => {
+    const localRaw = localStorage.getItem(STORAGE_KEY);
+    if (!localRaw || localRaw === '{}') {
+      siteData = fetchedData;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+      console.log('Admin settings pre-populated from server.');
+    } else {
+      siteData = Object.assign({}, fetchedData, siteData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+      console.log('Merged server settings with local storage.');
+    }
+  })
+  .catch(e => {
+    console.log('Using local/default settings:', e.message);
+  });
 
 const DEFAULT_HERO_STATS = [{num:'500',suffix:'+',label:'Installations'},{num:'15',suffix:'+',label:'Years Experience'},{num:'50',suffix:'+',label:'Product Lines'}];
 const DEFAULT_ABOUT_FEATS = ['Widest product range in India — 50+ equipment categories','End-to-end project support: layout planning to installation','Dedicated after-sales service & maintenance contracts','Certified quality — international safety standards','Custom branding & white-label solutions available'];

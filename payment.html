@@ -434,11 +434,10 @@ document.addEventListener('mouseover', e => { if(e.target.closest('a,button,.amo
 // ── LOAD ADMIN SETTINGS ──
 const STORAGE_KEY = 'igf_site_data';
 let siteData = {};
-try { siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch(e) {}
 
-const paySettings = siteData.paymentSettings || {};
-const RZP_KEY = paySettings.razorpayKey || '';
-const BUSINESS_NAME = paySettings.businessName || 'Indian Game Factory';
+let paySettings = {};
+let RZP_KEY = '';
+let BUSINESS_NAME = 'Indian Game Factory';
 const DEFAULT_PRESETS = [
   {amount:500, label:'₹500'},
   {amount:1000, label:'₹1000'},
@@ -446,20 +445,13 @@ const DEFAULT_PRESETS = [
   {amount:5000, label:'₹5000'},
   {amount:10000, label:'₹10000'}
 ];
-const presets = (paySettings.presetAmounts && paySettings.presetAmounts.length > 0) ? paySettings.presetAmounts : DEFAULT_PRESETS;
-
-// Sync nav brand
-if(siteData.brandName1) document.getElementById('payNavLine1').textContent = siteData.brandName1;
-if(siteData.brandName2) document.getElementById('payNavLine2').textContent = siteData.brandName2;
-if(paySettings.contactPhone) {
-  const ph = document.getElementById('payContactPhone');
-  if(ph) { ph.textContent = paySettings.contactPhone; ph.href = 'tel:' + paySettings.contactPhone.replace(/[^+0-9]/g,''); }
-}
+let presets = DEFAULT_PRESETS;
 
 // ── BUILD PRESET PILLS ──
 let selectedAmount = 0;
 function buildPills() {
   const container = document.getElementById('amountPills');
+  if (!container) return;
   container.innerHTML = '';
   presets.forEach((p, i) => {
     const btn = document.createElement('button');
@@ -470,6 +462,59 @@ function buildPills() {
     if(i === 0) { selectedAmount = p.amount; updateAmountDisplay(p.amount); }
   });
 }
+
+function applyPaymentSettings(data) {
+  siteData = data;
+  paySettings = siteData.paymentSettings || {};
+  RZP_KEY = paySettings.razorpayKey || '';
+  BUSINESS_NAME = paySettings.businessName || 'Indian Game Factory';
+  presets = (paySettings.presetAmounts && paySettings.presetAmounts.length > 0) ? paySettings.presetAmounts : DEFAULT_PRESETS;
+
+  // Sync nav brand
+  if(siteData.brandName1) {
+    const el = document.getElementById('payNavLine1');
+    if(el) el.textContent = siteData.brandName1;
+  }
+  if(siteData.brandName2) {
+    const el = document.getElementById('payNavLine2');
+    if(el) el.textContent = siteData.brandName2;
+  }
+  if(paySettings.contactPhone) {
+    const ph = document.getElementById('payContactPhone');
+    if(ph) { ph.textContent = paySettings.contactPhone; ph.href = 'tel:' + paySettings.contactPhone.replace(/[^+0-9]/g,''); }
+  }
+
+  // Dynamic WhatsApp links
+  const waNum = paySettings.contactPhone ? paySettings.contactPhone.replace(/[^+0-9]/g,'') : '919262260376';
+  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+    const url = new URL(link.href);
+    const textParam = url.searchParams.get('text') || 'Hi!';
+    link.href = `https://wa.me/${waNum}?text=${encodeURIComponent(textParam)}`;
+  });
+
+  buildPills();
+}
+
+// Initial sync with localstorage
+try {
+  applyPaymentSettings(JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'));
+} catch(e) {}
+
+// Async fetch from settings json
+fetch('./igf_admin_settings.json?v=' + Date.now())
+  .then(res => {
+    if (res.ok) return res.json();
+    throw new Error('No json');
+  })
+  .then(fetchedData => {
+    let localData = {};
+    try { localData = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch(e) {}
+    const finalData = Object.assign({}, fetchedData, localData);
+    applyPaymentSettings(finalData);
+  })
+  .catch(e => {
+    console.log('Using local/default payment settings:', e.message);
+  });
 
 function selectPreset(amount, btn) {
   document.querySelectorAll('.amount-pill').forEach(p => p.classList.remove('active'));
