@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -987,6 +987,34 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         Site Settings
       </div>
+
+      <!-- NEW FEATURE PANELS -->
+      <div class="nav-section-label" style="margin-top:8px;">Analytics &amp; CRM</div>
+      <div class="nav-item" onclick="showPanel('analytics');initAnalytics()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        Sales Analytics
+        <span class="nav-badge new">NEW</span>
+      </div>
+      <div class="nav-item" onclick="showPanel('orders');initAdminOrders()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Order Management
+        <span class="nav-badge new">NEW</span>
+      </div>
+      <div class="nav-item" onclick="showPanel('customers');initCustomers()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Customers
+        <span class="nav-badge new">NEW</span>
+      </div>
+      <div class="nav-item" onclick="showPanel('inventory');initInventory()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Inventory
+        <span class="nav-badge new">NEW</span>
+      </div>
+      <div class="nav-item" onclick="showPanel('coupons');initCoupons()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Coupons
+        <span class="nav-badge new">NEW</span>
+      </div>
     </nav>
 
     <div class="sidebar-footer">
@@ -1340,6 +1368,84 @@
         <div class="glow-sep"></div>
         <button class="btn btn-danger" onclick="confirmReset()">⚠ Reset All to Default</button>
       </div>
+    </div>
+
+
+    <!-- SALES ANALYTICS -->
+    <div class="panel" id="panel-analytics">
+      <div class="panel-header"><div class="panel-tag">Insights</div><div class="panel-title">Sales <span class="accent">Analytics</span></div><div class="panel-desc">Revenue, top products, and customer overview.</div></div>
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
+        <div class="stat-card"><div class="stat-num-big"><span>312</span></div><div class="stat-label-text">Total Orders</div><div class="stat-trend">+18% vs last year</div></div>
+        <div class="stat-card"><div class="stat-num-big">Rs<span>84L</span></div><div class="stat-label-text">Revenue (YTD)</div><div class="stat-trend">+23%</div></div>
+        <div class="stat-card"><div class="stat-num-big"><span>89</span></div><div class="stat-label-text">Active Customers</div><div class="stat-trend">+34 this month</div></div>
+        <div class="stat-card"><div class="stat-num-big">Rs<span>26k</span></div><div class="stat-label-text">Avg Order Value</div><div class="stat-trend">+8%</div></div>
+      </div>
+      <div class="g-card"><div class="card-title">Monthly Revenue</div><canvas id="revenueChart" height="80"></canvas></div>
+      <div class="g-card"><div class="card-title">Top Categories</div><div id="topProdsChart"></div></div>
+    </div>
+
+    <!-- ORDER MANAGEMENT -->
+    <div class="panel" id="panel-orders">
+      <div class="panel-header"><div class="panel-tag">Operations</div><div class="panel-title">Order <span class="accent">Management</span></div><div class="panel-desc">View and manage all customer orders.</div></div>
+      <div class="g-card">
+        <div class="card-title">All Orders</div>
+        <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;" id="ordersTable">
+          <thead><tr style="border-bottom:1px solid rgba(255,87,34,0.15);">
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">ORDER ID</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">PRODUCT</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">CUSTOMER</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">AMOUNT</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">STATUS</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">DATE</th>
+          </tr></thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- CUSTOMER MANAGEMENT -->
+    <div class="panel" id="panel-customers">
+      <div class="panel-header"><div class="panel-tag">CRM</div><div class="panel-title">Customer <span class="accent">Management</span></div><div class="panel-desc">View and manage your customer database.</div></div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-num-big"><span>89</span></div><div class="stat-label-text">Total Customers</div></div>
+        <div class="stat-card"><div class="stat-num-big"><span>34</span></div><div class="stat-label-text">New This Month</div></div>
+        <div class="stat-card"><div class="stat-num-big"><span>12</span></div><div class="stat-label-text">Repeat Buyers</div></div>
+      </div>
+      <div class="g-card">
+        <div class="card-title">Customer Database</div>
+        <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="border-bottom:1px solid rgba(255,87,34,0.12);">
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">#</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">NAME</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">CITY</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">EMAIL</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">ORDERS</th>
+            <th style="padding:10px;font-family:'Orbitron',sans-serif;font-size:0.48rem;color:var(--text-dim);text-align:left;">TOTAL SPENT</th>
+          </tr></thead>
+          <tbody id="customersTableBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- INVENTORY MANAGEMENT -->
+    <div class="panel" id="panel-inventory">
+      <div class="panel-header"><div class="panel-tag">Stock</div><div class="panel-title">Inventory <span class="accent">Management</span></div><div class="panel-desc">Monitor stock levels for all categories.</div></div>
+      <div class="g-card"><div class="card-title">Stock Levels</div><div id="inventoryTableBody"></div></div>
+    </div>
+
+    <!-- COUPON MANAGEMENT -->
+    <div class="panel" id="panel-coupons">
+      <div class="panel-header"><div class="panel-tag">Promotions</div><div class="panel-title">Coupon <span class="accent">Management</span></div><div class="panel-desc">Create and manage discount codes.</div></div>
+      <div class="g-card" style="margin-bottom:20px;">
+        <div class="card-title">Create New Coupon</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
+          <div class="field-group" style="margin:0;"><label class="field-label">CODE</label><input class="field-input" id="newCouponCode" placeholder="e.g. SUMMER25" /></div>
+          <div class="field-group" style="margin:0;"><label class="field-label">DISCOUNT %</label><input class="field-input" type="number" id="newCouponPct" placeholder="10" /></div>
+          <div class="field-group" style="margin:0;"><label class="field-label">EXPIRY DATE</label><input class="field-input" type="date" id="newCouponExpiry" /></div>
+          <button class="btn btn-primary" onclick="createCoupon()">+ CREATE</button>
+        </div>
+      </div>
+      <div class="g-card"><div class="card-title">Active Coupons</div><div id="couponsList"></div></div>
     </div>
 
   </div><!-- /main-content -->
@@ -2360,6 +2466,167 @@ document.addEventListener('keydown', e => {
   if(e.key==='Escape') { closeModal(); closeConfirm(); }
   if((e.ctrlKey||e.metaKey)&&e.key==='s') { e.preventDefault(); saveAllChanges(); }
 });
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// NEW FEATURE PANELS: Analytics, Orders, Customers, Inventory, Coupons
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+// Analytics
+function initAnalytics() {
+  var cats = [
+    { name:'Air Hockey', pct:32, rev:'Rs18L' }, { name:'Bumper Cars', pct:28, rev:'Rs15L' },
+    { name:'VR Simulators', pct:18, rev:'Rs10L' }, { name:'Kiddy Rides', pct:12, rev:'Rs7L' },
+    { name:'Basketball', pct:10, rev:'Rs5L' }
+  ];
+  var tEl = document.getElementById('topProdsChart');
+  if (tEl) {
+    tEl.innerHTML = cats.map(function(c) {
+      return '<div style="margin-bottom:14px;">'
+        + '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'
+        + '<span style="font-size:0.85rem;color:var(--text-primary);">' + c.name + '</span>'
+        + '<span style="font-family:Orbitron,sans-serif;font-size:0.7rem;color:var(--igf-orange);">' + c.rev + ' (' + c.pct + '%)</span>'
+        + '</div>'
+        + '<div style="height:5px;background:rgba(255,87,34,0.1);border-radius:3px;overflow:hidden;">'
+        + '<div style="width:' + c.pct + '%;height:100%;background:linear-gradient(90deg,#c0392b,#ff5722);border-radius:3px;"></div>'
+        + '</div></div>';
+    }).join('');
+  }
+  if (window.Chart) { renderRevenueChart(); }
+  else {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
+    s.onload = renderRevenueChart;
+    document.head.appendChild(s);
+  }
+}
+
+function renderRevenueChart() {
+  var ctx = document.getElementById('revenueChart');
+  if (!ctx || ctx._igfChart) return;
+  ctx._igfChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      datasets: [{ label: 'Revenue (Rs L)', data: [3.2,4.8,5.1,6.8,7.2,9.5,8.3,10.2,11.4,9.8,6.5,7.9], backgroundColor: 'rgba(255,87,34,0.3)', borderColor: '#ff5722', borderWidth: 2, borderRadius: 4 }]
+    },
+    options: {
+      plugins: { legend: { labels: { color: '#8a6050' } } },
+      scales: { x: { ticks: { color: '#8a6050' }, grid: { color: 'rgba(255,87,34,0.06)' } }, y: { ticks: { color: '#8a6050' }, grid: { color: 'rgba(255,87,34,0.06)' } } }
+    }
+  });
+}
+
+// Orders
+var MOCK_ORDERS = [
+  { id:'IGF-2026-001', product:'Air Hockey Table', customer:'Rajesh Kumar', city:'Mumbai', amount:'Rs2,45,000', status:'delivered', date:'5 Jun 2026' },
+  { id:'IGF-2026-042', product:'Bumper Car x4', customer:'Priya Hotels Ltd', city:'Bengaluru', amount:'Rs6,80,000', status:'dispatched', date:'18 Jun 2026' },
+  { id:'IGF-2026-088', product:'VR Simulator', customer:'FunZone Pvt Ltd', city:'Delhi', amount:'Rs4,20,000', status:'processing', date:'24 Jun 2026' },
+  { id:'IGF-2026-125', product:'Kiddy Rides x8', customer:'Amusement Hub', city:'Hyderabad', amount:'Rs3,60,000', status:'confirmed', date:'26 Jun 2026' },
+  { id:'IGF-2026-093', product:'Basketball Machine x2', customer:'Sports Arena', city:'Pune', amount:'Rs1,80,000', status:'delivered', date:'12 Jun 2026' },
+];
+function initAdminOrders() { renderOrdersTable(MOCK_ORDERS); }
+function renderOrdersTable(orders) {
+  var body = document.getElementById('ordersTableBody');
+  if (!body) return;
+  var sc = { delivered:'#4ade80', dispatched:'#60a5fa', processing:'#fbbf24', confirmed:'#ff5722' };
+  body.innerHTML = orders.map(function(o) {
+    return '<tr style="border-bottom:1px solid rgba(255,87,34,0.06);">'
+      + '<td style="padding:12px 10px;font-family:Orbitron,sans-serif;font-size:0.65rem;color:var(--igf-orange);">'+o.id+'</td>'
+      + '<td style="padding:12px 10px;font-size:0.83rem;color:var(--text-primary);">'+o.product+'</td>'
+      + '<td style="padding:12px 10px;font-size:0.83rem;color:var(--text-muted);">'+o.customer+'</td>'
+      + '<td style="padding:12px 10px;font-family:Orbitron,sans-serif;font-size:0.7rem;color:var(--igf-amber);">'+o.amount+'</td>'
+      + '<td style="padding:12px 10px;"><span style="padding:4px 10px;border-radius:20px;font-family:Orbitron,sans-serif;font-size:0.45rem;color:'+(sc[o.status]||'#fff')+';border:1px solid '+(sc[o.status]||'rgba(255,255,255,0.2)')+';text-transform:uppercase;">'+o.status+'</span></td>'
+      + '<td style="padding:12px 10px;font-size:0.78rem;color:var(--text-muted);">'+o.date+'</td></tr>';
+  }).join('');
+}
+
+// Customers
+var MOCK_CUSTOMERS = [
+  { name:'Rajesh Kumar', city:'Mumbai', email:'rajesh@email.com', orders:3, spent:'Rs6,85,000' },
+  { name:'Priya Hotels Ltd', city:'Bengaluru', email:'ops@priyahotels.com', orders:2, spent:'Rs8,20,000' },
+  { name:'FunZone Pvt Ltd', city:'Delhi', email:'admin@funzone.in', orders:1, spent:'Rs4,20,000' },
+  { name:'Amusement Hub', city:'Hyderabad', email:'contact@amhub.com', orders:4, spent:'Rs12,40,000' },
+  { name:'Sports Arena', city:'Pune', email:'info@sportsarena.com', orders:2, spent:'Rs3,60,000' },
+];
+function initCustomers() {
+  var body = document.getElementById('customersTableBody');
+  if (!body) return;
+  body.innerHTML = MOCK_CUSTOMERS.map(function(c, i) {
+    return '<tr style="border-bottom:1px solid rgba(255,87,34,0.06);">'
+      + '<td style="padding:12px 10px;font-family:Orbitron,sans-serif;font-size:0.6rem;color:var(--text-dim);">'+(i+1)+'</td>'
+      + '<td style="padding:12px 10px;font-weight:600;color:var(--text-primary);">'+c.name+'</td>'
+      + '<td style="padding:12px 10px;color:var(--text-muted);">'+c.city+'</td>'
+      + '<td style="padding:12px 10px;color:var(--text-muted);">'+c.email+'</td>'
+      + '<td style="padding:12px 10px;font-family:Orbitron,sans-serif;font-size:0.65rem;color:var(--igf-orange);text-align:center;">'+c.orders+'</td>'
+      + '<td style="padding:12px 10px;font-family:Orbitron,sans-serif;font-size:0.68rem;color:var(--igf-amber);">'+c.spent+'</td></tr>';
+  }).join('');
+}
+
+// Inventory
+var STOCK_DATA = [
+  { cat:'Air Hockey Tables', stock:12, max:20, status:'in-stock' },
+  { cat:'Bumper Cars', stock:3, max:15, status:'low-stock' },
+  { cat:'VR Simulators', stock:8, max:10, status:'in-stock' },
+  { cat:'Kiddy Rides', stock:24, max:30, status:'in-stock' },
+  { cat:'Basketball Machines', stock:1, max:10, status:'low-stock' },
+  { cat:'Trampoline Parks', stock:0, max:5, status:'out-of-stock' },
+];
+function initInventory() {
+  var body = document.getElementById('inventoryTableBody');
+  if (!body) return;
+  var sc = { 'in-stock':{ bg:'rgba(74,222,128,0.1)', color:'#4ade80', label:'IN STOCK' }, 'low-stock':{ bg:'rgba(251,191,36,0.1)', color:'#fbbf24', label:'LOW STOCK' }, 'out-of-stock':{ bg:'rgba(239,68,68,0.1)', color:'#ef4444', label:'OUT OF STOCK' } };
+  body.innerHTML = STOCK_DATA.map(function(item) {
+    var s = sc[item.status]; var pct = Math.round(item.stock/item.max*100);
+    return '<div style="display:grid;grid-template-columns:2fr 1fr 2fr 1fr;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,87,34,0.06);">'
+      + '<div style="font-weight:600;color:var(--text-primary);">'+item.cat+'</div>'
+      + '<div style="font-family:Orbitron,sans-serif;font-size:0.7rem;color:var(--igf-amber);">'+item.stock+'/'+item.max+'</div>'
+      + '<div style="height:6px;background:rgba(255,87,34,0.1);border-radius:3px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+s.color+';border-radius:3px;"></div></div>'
+      + '<span style="padding:4px 10px;border-radius:20px;font-family:Orbitron,sans-serif;font-size:0.42rem;background:'+s.bg+';color:'+s.color+';text-align:center;">'+s.label+'</span>'
+      + '</div>';
+  }).join('');
+}
+
+// Coupons
+function initCoupons() { renderCouponsList(); }
+function getCoupons() {
+  var def = [{code:'IGF10',pct:10,expiry:'2026-12-31',uses:45,maxUses:100},{code:'NEXUS20',pct:20,expiry:'2026-09-30',uses:12,maxUses:50},{code:'WELCOME',pct:5,expiry:'2026-12-31',uses:88,maxUses:200},{code:'PREMIUM15',pct:15,expiry:'2026-08-31',uses:7,maxUses:30},{code:'IGF2026',pct:12,expiry:'2026-12-31',uses:23,maxUses:80}];
+  try { return JSON.parse(localStorage.getItem('igf_admin_coupons')||JSON.stringify(def)); } catch(e) { return def; }
+}
+function saveCoupons(c) { localStorage.setItem('igf_admin_coupons',JSON.stringify(c)); renderCouponsList(); }
+function renderCouponsList() {
+  var el = document.getElementById('couponsList');
+  if (!el) return;
+  el.innerHTML = getCoupons().map(function(c,i) {
+    var pct2 = Math.round(c.uses/c.maxUses*100);
+    return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,87,34,0.06);">'
+      + '<span style="font-family:Orbitron,sans-serif;font-size:0.75rem;font-weight:700;color:var(--igf-orange);">'+c.code+'</span>'
+      + '<span style="font-family:Orbitron,sans-serif;font-size:0.7rem;color:var(--igf-amber);">'+c.pct+'% OFF</span>'
+      + '<span style="font-size:0.78rem;color:var(--text-muted);">'+c.expiry+'</span>'
+      + '<div><span style="font-size:0.78rem;color:var(--text-muted);">'+c.uses+'/'+c.maxUses+'</span><div style="height:3px;background:rgba(255,87,34,0.1);border-radius:2px;margin-top:4px;overflow:hidden;"><div style="width:'+pct2+'%;height:100%;background:var(--igf-orange);"></div></div></div>'
+      + '<button onclick="deleteCoupon('+i+')" style="background:transparent;border:1px solid rgba(239,68,68,0.25);color:#ef4444;width:28px;height:28px;border-radius:50%;cursor:none;display:flex;align-items:center;justify-content:center;">x</button>'
+      + '</div>';
+  }).join('');
+}
+function createCoupon() {
+  var code=(document.getElementById('newCouponCode').value||'').trim().toUpperCase();
+  var pct=parseInt(document.getElementById('newCouponPct').value||'0',10);
+  var expiry=document.getElementById('newCouponExpiry').value;
+  if(!code||!pct||!expiry){alert('Fill in Code, Discount %, and Expiry.');return;}
+  var coupons=getCoupons();
+  if(coupons.find(function(c){return c.code===code;})){alert('Code already exists.');return;}
+  coupons.push({code:code,pct:pct,expiry:expiry,uses:0,maxUses:100});
+  saveCoupons(coupons);
+  document.getElementById('newCouponCode').value='';
+  document.getElementById('newCouponPct').value='';
+  document.getElementById('newCouponExpiry').value='';
+  toast('Coupon '+code+' created!');
+}
+function deleteCoupon(idx) {
+  var coupons=getCoupons();
+  if(confirm('Delete '+coupons[idx].code+'?')){coupons.splice(idx,1);saveCoupons(coupons);toast('Coupon deleted.');}
+}
 </script>
 </body>
 </html>
+
+
